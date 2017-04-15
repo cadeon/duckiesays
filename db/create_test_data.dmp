@@ -1,0 +1,31 @@
+
+COPY quotes (id, says) FROM stdin;
+1	Don't try to teach a pig to sing. It wastes your time and annoys the pig.
+2	If there’s time to do it twice, there’s time to do it right. 
+3	Sanitize your inputs. 
+4	All averages eventually work out to zero. 
+5	If it’s stupid, but it works, it’s not stupid (for now). 
+6	If you can get pizza delivered there, it’s not secure. 
+7	Components should be able to build and install themselves. 
+8	Use a branch. 
+9	Unit test it. 
+10	Functions shouldn’t know things (that’s what data is for).
+11	Data shouldn’t do things (that’s what functions are for).
+12	The system should design and assemble itself. 
+13	No. 
+14	If it doesn’t run at the end of the sprint, the sprint failed. 
+15	Your Story is too big. 
+16	Your Epic is too broad. 
+17	Your requirements suck. Fix those first, then fix the code.
+18	Make your comments consistent and readable. 
+19	Your inconsistent indentation makes babies cry. 
+20	Rebooting is *not* going to fix your time sync issue. 
+21	Document your pull requests. 
+22	Don’t break trunk/develop/master.
+23	Commit and push early and often. 
+24	CI is the way. 
+25	Do things better by not doing them.
+\.
+SELECT pg_catalog.setval('quotes_id_seq', 25, true);
+
+

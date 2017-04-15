@@ -1,0 +1,13 @@
+# gitignore
+node_modules
+.DS_store
+.vscode
+
+*#*
+
+# Logs #
+log
+
+# Database backups #
+####################
+backup*
