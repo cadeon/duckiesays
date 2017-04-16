@@ -115,7 +115,7 @@ $( document ).ready(function () {
     var url = window.location.href;
     var id = url.match(/\/(\d+)$/);
 
-    var root = "http://" + window.location.host;
+    var root = "https://" + window.location.host;
     var target = root +"/api/v1/says"
     if (id) {
         target += "/"+id[1];
@@ -127,6 +127,17 @@ $( document ).ready(function () {
         $("#ducklink").attr("href",root);
     });
 })
+</script>
+<!-- GA - Should we trigger this at duck click too? -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-97418919-1', 'auto');
+  ga('send', 'pageview');
+
 </script>
 
 </body>
