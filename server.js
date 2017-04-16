@@ -11,6 +11,7 @@ var config = require('./config/config');
 var dbConfig = require('./config/knex');
 
 var winston = require('winston');
+var logger = new winston.Logger({transports : winston.loggers.options.transports});
 
 var app = Koa();
 
@@ -24,9 +25,19 @@ app.use(Flash());
 
 require('./app/routes')(app);
 
+
+app.use(function* index(next) {
+    var img = this.url.match(/\/img\/*/);
+    if (this. url === '/' || img ) {
+        yield next;
+    } else {
+        yield send(this, './public/index.html');
+    }
+});
+
 app.use(serve({rootDir: 'public'}));
 
-var logger = new winston.Logger({transports : winston.loggers.options.transports});
+
 logger.info('Server started');
 
 var server = app.listen(config.port);

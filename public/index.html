@@ -86,16 +86,19 @@ text-align:center;
 </head>
 
 <body>
-    <div class="duckie">
-        <img src="img/pitr-Ducky-icon-2400px.png" alt="duckie" height="200" width="200"/>
-    </div>
-    <div class="quote">
+  <div class="duckie">
+      <a href id="ducklink" border=0>
+          <img src="img/pitr-Ducky-icon-2400px.png" alt="duckie" height="200" width="200"/>
+      </a>
+  </div>
+  <div class="quote">
         <blockquote id="quote">Say something pithy</blockquote>
-    </div>
-    <div class="footer">
+  </div>
+
+  <div class="footer">
         <a class=left id=permalink href="">Go somewhere cool</a>
 
-    </div>
+  </div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">></script>
 <script type="text/javascript">
@@ -104,7 +107,7 @@ $( document ).ready(function () {
     var url = window.location.href;
     var id = url.match(/\/(\d+)$/);
 
-    var root = "http://localhost:7007";
+    var root = "http://" + window.location.host;
     var target = root +"/api/v1/says"
     if (id) {
         target += "/"+id[1];
@@ -113,6 +116,7 @@ $( document ).ready(function () {
         $("#quote").text(data.says);
         $("#permalink").attr("href",root+"/"+data.id);
         $("#permalink").text(root+"/"+data.id);
+        $("#ducklink").attr("href",root);
     });
 })
 </script>
