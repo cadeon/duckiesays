@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Duckie Says</title>
+</head>
+
+<body>
+ 
+    <div id="main">
+        <span id="duck_image"><img src="./img/pitr-Ducky-icon-2400px.png" alt="duckie"/></span><br>
+        <span id="quote">Say something pithy</span><br>
+        <span id="link">Permalink: <a id=permalink href="">Go somewhere cool</a></span>
+    </div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">></script>
+<script type="text/javascript">
+
+$( document ).ready(function () {
+    var url = window.location.href;
+    var id = url.match(/\/(\d+)$/);
+    var root = "http://localhost:7007";
+    var target = root +"/api/v1/says"
+    if (id) {
+        target += "/"+id[1];
+    }
+    $.getJSON(target, function(data){
+        $("#quote").text(data.says);
+        $("#permalink").attr("href",root+"/"+data.id);
+        $("#permalink").text(root+"/"+data.id);
+    });
+})
+</script>
+
+</body>
+</html>
