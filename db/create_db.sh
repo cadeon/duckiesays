@@ -9,7 +9,7 @@
 # For authentication to postgres to work from a non-postgres system level user, we need to set
 # the PGPASSWORD environment variable. 
 
-# export PGPASSWORD=<pwd>
+export PGPASSWORD=liquidgenius
 
 t=$(date "+%Y.%m.%d-%H.%M.%S")
 
