@@ -6,7 +6,7 @@ var Views = require('koa-views');
 var Flash = require('koa-flash');
 var Router = require('koa-router');
 var send    = require('koa-send');
-var serve = require('koa-static');
+var serve = require('koa-static-server');
 var config = require('./config/config');
 var dbConfig = require('./config/knex');
 
@@ -24,9 +24,7 @@ app.use(Flash());
 
 require('./app/routes')(app);
 
-app.use(function* index() {
-  yield send(this, './public/index.html');
-});
+app.use(serve({rootDir: 'public'}));
 
 var logger = new winston.Logger({transports : winston.loggers.options.transports});
 logger.info('Server started');
