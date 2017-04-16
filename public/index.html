@@ -55,33 +55,34 @@ div {
     padding-bottom: 40px;
 }
 .footer {
-    position: absolute;
-    bottom: 0;
-    left:0;
-    right: 0;
+    text-decoration-color: whiteSmoke;
     height: 40px;
-    background-color: whiteSmoke;
-    border-top: 1px solid #DDD;
     -webkit-border-bottom-left-radius: 5px;
     -webkit-border-bottom-right-radius: 5px;
     -moz-border-radius-bottomleft: 5px;
     -moz-border-radius-bottomright: 5px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+    padding-top: 10px;
+}
+a:link {
+    color: powderBlue;
 }
 
-.left{
-text-align:left;
-float:left;
-}
-.right{
-float:right;
-text-align:right;
-}
-.centered{
-text-align:center;
+/* visited link */
+a:visited {
+    color: powderBlue;
 }
 
+/* mouse over link */
+a:hover {
+    color: yellow;
+}
+
+/* selected link */
+a:active {
+    color: powderBlue;
+}
 </style>
 </head>
 
@@ -96,8 +97,7 @@ text-align:center;
   </div>
 
   <div class="footer">
-        <a class=left id=permalink href="">Go somewhere cool</a>
-
+        <a id=permalink href="">Go somewhere cool</a>
   </div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">></script>
