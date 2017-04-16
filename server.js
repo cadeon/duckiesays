@@ -27,14 +27,10 @@ require('./app/routes')(app);
 
 
 app.use(function* index(next) {
-    logger.info(this.url);
     var img = this.url.match(/\/img\/*/);
-    logger.info(img);
     if (this. url === '/' || img ) {
-        logger.info('access public');
         yield next;
     } else {
-        logger.info('access permalink');
         yield send(this, './public/index.html');
     }
 });
