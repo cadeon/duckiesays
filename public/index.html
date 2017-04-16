@@ -9,7 +9,7 @@
 
 <style>
 body {
-    background-color: #FFFACD
+    background-color: #6495ED
 }
 
 blockquote {
@@ -17,6 +17,7 @@ blockquote {
     font-size:42px;
     font-weight:bold;
     font-family:Georgia, "Times New Roman", Times, serif;
+    color:#fff;
     text-align:center;
 }
 div {
@@ -26,25 +27,74 @@ div {
   justify-content: center;
   border: 10;
 }
-img.displayed {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+
+.duckie {
+    height: 200px;
+    border-bottom: 2px solid #EEE;
+    background-color: #6495ED;
+    height: 200px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.quote {
+    height: 200px;
+    border-bottom: 2px solid #EEE;
+    background-color: #6495ED;
+    height: 200px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding-bottom: 40px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    left:0;
+    right: 0;
+    height: 40px;
+    background-color: whiteSmoke;
+    border-top: 1px solid #DDD;
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.left{
+text-align:left;
+float:left;
+}
+.right{
+float:right;
+text-align:right;
+}
+.centered{
+text-align:center;
 }
 
 </style>
 </head>
 
 <body>
- 
-    <div>
+    <div class="duckie">
+        <img src="img/pitr-Ducky-icon-2400px.png" alt="duckie" height="200" width="200"/>
+    </div>
+    <div class="quote">
         <blockquote id="quote">Say something pithy</blockquote>
     </div>
-    <div>
-        <span id="duck_image"><img src="img/pitr-Ducky-icon-2400px.png" alt="duckie" height="200" width="200"/></span>
-    </div>
-    <div>
-        <span id="link">Permalink: <a id=permalink href="">Go somewhere cool</a></span>
+    <div class="footer">
+        <a class=left id=permalink href="">Go somewhere cool</a>
+
     </div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">></script>
