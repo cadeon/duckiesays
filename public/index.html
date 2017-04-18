@@ -11,21 +11,10 @@
 body {
     background-color: #6495ED
 }
-
-blockquote {
-    border:none;
-    font-size:42px;
-    font-weight:bold;
-    font-family:Georgia, "Times New Roman", Times, serif;
-    color:#fff;
-    text-align:center;
-}
 div {
-  height: 10em;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 10;
 }
 
 .duckie {
@@ -42,23 +31,16 @@ div {
 }
 
 .container {
-    height: 200px;
+    min-height: 10vh;
     border-bottom: 2px solid #EEE;
-    background-color: #6495ED;
-    height: 200px;
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
 }
 .box {
-    margin-top: 15px;
+    margin: 3vh;
     color: whiteSmoke;
     font-size: 32px;
     text-align: center;
     font-family:Georgia, "Times New Roman", Times, serif;
+    height:auto;
 }
 
 .footer {
@@ -99,6 +81,14 @@ a:active {
     font-weight:bold;
     font-family:Georgia, "Times New Roman", Times, serif;
 }
+
+body {
+  margin:0;
+}
+section.box {
+  flex: 1;
+
+}
 </style>
 </head>
 
@@ -106,12 +96,13 @@ a:active {
   <div class="duckie">
       <a href id="ducklink" border=0>
           <img src="img/pitr-Ducky-icon.svg"
-          onerror="this.src='img/pitr-Ducky-icon-300px.png'" 
+          onerror="this.src='img/pitr-Ducky-icon-300px.png'"
           alt="duckie" height="200" width="200"/>
       </a>
   </div>
   <div class="container">
-        <p class="box" id="quote">. . .</p>
+        <span class="box" id="quote">. . .</span>
+    </section>
   </div>
 
   <div class="footer">
