@@ -122,15 +122,10 @@ section.box {
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">></script>
 <script type="text/javascript">
 
-$( document ).ready(function () {
-    var url = window.location.href;
-    var id = url.match(/\/(\d+)$/);
+duckie.get.quote = function () {
 
     var root = "https://duckiesays.com";
     var target = root +"/api/v1/says"
-    if (id) {
-        target += "/"+id[1];
-    }
     $.getJSON(target, function(data){
         $("#quote").text(data.says);
         $("#permalink").attr("href",root+"/"+data.id);
@@ -149,6 +144,7 @@ $( document ).ready(function () {
   ga('create', 'UA-97418919-1', 'auto');
   ga('send', 'pageview');
 
+  gadgets.util.registerOnLoadHandler(duckie.get.quote);
 </script>
 
 </body>
