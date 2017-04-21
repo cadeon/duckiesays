@@ -28,7 +28,7 @@ require('./app/routes')(app);
 
 app.use(function* index(next) {
     var img = this.url.match(/\/img\/*/);
-    if (this. url === '/' || img || 'gadget.xml' ) {
+    if (this. url === '/' || img ) {
         yield next;
     } else {
         yield send(this, './public/index.html');
