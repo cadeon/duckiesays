@@ -125,7 +125,7 @@ section.box {
 duckie.get.quote = function () {
 
     var root = "https://duckiesays.com";
-    var target = root +"/api/v1/says"
+    var target = root +"/api/v1/says?callback=?"
     $.getJSON(target, function(data){
         $("#quote").text(data.says);
         $("#permalink").attr("href",root+"/"+data.id);
@@ -133,6 +133,7 @@ duckie.get.quote = function () {
         $("#ducklink").attr("href",root);
     });
 })
+gadgets.util.registerOnLoadHandler(duckie.get.quote);
 </script>
 <!-- GA - Should we trigger this at duck click too? -->
 <script>
@@ -143,8 +144,6 @@ duckie.get.quote = function () {
 
   ga('create', 'UA-97418919-1', 'auto');
   ga('send', 'pageview');
-
-  gadgets.util.registerOnLoadHandler(duckie.get.quote);
 </script>
 
 </body>
