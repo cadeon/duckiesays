@@ -14,6 +14,8 @@
     <EnumValue value="yes" display_value="Yes"/>
   </UserPref>
   <Content type="html" view="default,canvas">
+    <![CDATA[
+      #requireResource("com.atlassian.jira.gadgets:common")
   <div id='dest'><img src="http://www.google.com/ig/images/spinner.gif"/></div>
   <script type="text/javascript">
   gadgets.util.registerOnLoadHandler(doRender);
@@ -51,5 +53,6 @@
     dest.appendChild(iframe);
   }
   </script>
+  ]]>
   </Content>
 </Module>
