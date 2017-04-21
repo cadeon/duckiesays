@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Duckie Gadget" title_url="https://duckiesays.com/"
+          description="Get a random duckie saying"
+          thumbnail="https://duckiesays.com/img/pitr-Ducky-icon-300px.png"
+          screenshot="https://duckiesays.com/img/pitr-Ducky-icon-300px.png"
+          height="800" width="600" author="Liquid Genius">
+    <Require feature="dynamic-height"/>
+  </ModulePrefs>
+  <UserPref name="iframeURL" display_name="URL to content" required="true"/>
+  <UserPref name="scroll" display_name="Display scrollbar" default_value="auto" datatype="enum">
+    <EnumValue value="auto" display_value="Automatic"/>
+    <EnumValue value="no" display_value="No"/>
+    <EnumValue value="yes" display_value="Yes"/>
+  </UserPref>
+  <Content type="html" view="default,canvas">
+  <div id='dest'><img src="http://www.google.com/ig/images/spinner.gif"></div>
+  <script type="text/javascript">
+  gadgets.util.registerOnLoadHandler(doRender);
+
+  function doRender(){
+    // setup variables
+    var prefs = new gadgets.Prefs();
+    var iframeURL = 'https://duckiesays.com';
+    var scroll = 'no';
+    var height = 800;
+    var width = 600;
+
+    if (gadgets.window) {
+      var viewport = gadgets.window.getViewportDimensions();
+      if (viewport.width) {
+        var width = viewport.width;
+      }
+      if (viewport.height) {
+        var height = viewport.height;
+      }
+    }
+
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('width', width + 'px');
+    iframe.setAttribute('height', height + 'px');
+    iframe.setAttribute('frameborder','no');
+    if(scroll){
+      iframe.setAttribute('scrolling', scroll);
+    }
+    iframe.setAttribute('src', iframeURL);
+
+    // set the slideshow to the placeholder div
+    var dest = document.getElementById('dest');
+    dest.innerHTML = '';
+    dest.appendChild(iframe);
+  }
+  </script>
+  </Content>
+</Module>
