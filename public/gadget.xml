@@ -105,8 +105,8 @@ section.box {
 <body>
   <div class="duckie">
       <a href id="ducklink" border=0>
-          <img src="img/pitr-Ducky-icon.svg"
-          onerror="this.src='img/pitr-Ducky-icon-300px.png'"
+          <img src="https://duckiesays.com/img/pitr-Ducky-icon.svg"
+          onerror="this.src='https://duckiesays.com/img/pitr-Ducky-icon-300px.png'"
           alt="duckie" height="200" width="200"/>
       </a>
   </div>
@@ -126,7 +126,7 @@ $( document ).ready(function () {
     var url = window.location.href;
     var id = url.match(/\/(\d+)$/);
 
-    var root = "https://" + window.location.host;
+    var root = "https://duckiesays.com";
     var target = root +"/api/v1/says"
     if (id) {
         target += "/"+id[1];
