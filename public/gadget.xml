@@ -9,7 +9,151 @@
   </ModulePrefs>
   <Content type="html" view="default,canvas">
     <![CDATA[
-      <iframe src="https://duckiesays.com" noborder="0" width="900" height="900" scrolling="no" seamless></iframe>
+    <html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Duckie Says</title>
+
+<style>
+body {
+    background-color: #6495ED
+}
+div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duckie {
+    height: 200px;
+    border-bottom: 2px solid #EEE;
+    background-color: #6495ED;
+    height: 200px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.container {
+    min-height: 10vh;
+    border-bottom: 2px solid #EEE;
+}
+.box {
+    margin: 3vh;
+    color: whiteSmoke;
+    font-size: 32px;
+    text-align: center;
+    font-family:Georgia, "Times New Roman", Times, serif;
+    height:auto;
+}
+
+.footer {
+    right:5px;
+    left: 5px;
+    bottom:5px;
+    background-color: whiteSmoke;
+    height: 30px;
+    margin-top:30px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+a:link {
+    color: #6495ED;
+    font-weight:bold;
+    font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+/* visited link */
+a:visited {
+    color: #6495ED;
+    font-weight:bold;
+    font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+/* mouse over link */
+a:hover {
+    color: dodgerBlue;
+    font-weight:bold;
+    font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+/* selected link */
+a:active {
+    color: #6495ED;
+    font-weight:bold;
+    font-family:Georgia, "Times New Roman", Times, serif;
+}
+
+body {
+  margin:0;
+}
+section.box {
+  flex: 1;
+
+}
+</style>
+</head>
+
+<body>
+  <div class="duckie">
+      <a href id="ducklink" border=0>
+          <img src="img/pitr-Ducky-icon.svg"
+          onerror="this.src='img/pitr-Ducky-icon-300px.png'"
+          alt="duckie" height="200" width="200"/>
+      </a>
+  </div>
+  <div class="container">
+        <span class="box" id="quote">. . .</span>
+    </section>
+  </div>
+
+  <div class="footer">
+        <a id=permalink href="">. . .</a>
+  </div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">></script>
+<script type="text/javascript">
+
+$( document ).ready(function () {
+    var url = window.location.href;
+    var id = url.match(/\/(\d+)$/);
+
+    var root = "https://" + window.location.host;
+    var target = root +"/api/v1/says"
+    if (id) {
+        target += "/"+id[1];
+    }
+    $.getJSON(target, function(data){
+        $("#quote").text(data.says);
+        $("#permalink").attr("href",root+"/"+data.id);
+        $("#permalink").text(root+"/"+data.id);
+        $("#ducklink").attr("href",root);
+    });
+})
+</script>
+<!-- GA - Should we trigger this at duck click too? -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-97418919-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
+
   ]]>
   </Content>
 </Module>
