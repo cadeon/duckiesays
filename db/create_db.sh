@@ -42,5 +42,5 @@ echo "...done"
 ## DATA INSERTION
 ## uncomment psql line below
 echo "Creating data..."
-psql duckiedb < create_db.dmp
+psql -U postgres -h 127.0.0.1 duckiedb < create_db.dmp
 echo "...done"
