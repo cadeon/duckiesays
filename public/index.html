@@ -120,6 +120,7 @@ $( document ).ready(function () {
     var target = root +"/api/v1/says"
     if (id) {
         target += "/"+id[1];
+	history.pushState(null, null, root + target);
     }
     $.getJSON(target, function(data){
         $("#quote").text(data.says);
