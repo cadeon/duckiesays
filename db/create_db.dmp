@@ -37,9 +37,32 @@ COPY quotes (id, says) FROM stdin;
 36	Engineering is done with numbers. Analysis without numbers is only an opinion.
 37	Use HTTPS. It's good enough for Duckie, it's good enough for you.
 38	"Better" is the enemy of "good".
-39	The fact that an analysis appears in print has no relationship to the likelihood of its being correct.
+39	An analysis appearing in print has no relationship to the likelihood of its being correct.
 40	You can't get to the moon by climbing successively taller trees.
 41	Do what you can, where you are, with what you have.
 42	You can't make it better until you make it work.
+43	Write down your experiences.
+44	Lock your screen.
+45	Sometimes you have to go through complexity to get to simplicity
+46	Not everyone thinks the same way you do.
+47	Draw something
+48	If you don't know what's valuable, stop working
+49	To-be without consideration of as-is is art. Connecting the as-is and the to-be is engineering.
+50	Assumptions are the cause of most problems.
+51	Planning for the future helps you make better decisions today.
+52	Agile without learning is just a to-do list.
+53	Every solution creates the need for 100 more.
+54	Problems cause solutions. Solutions cause problems. Causes cause both.
+55	Seize the much in the small.
+56	Reality is a grand confusion.
+57	When in doubt, measure the chaos.
+58	Sometimes the right tool really IS a hammer.
+59	Quality > Quantity
+60	Don't save binaries in databases.
+61	Practice Duck-based Development.
+62	Build the company you want, from where you are now. 
+63	Fix your bozo explosion.
+64	But first, coffee.
+65	Explain it to me like I'm a duck.
 \.
-SELECT pg_catalog.setval('quotes_id_seq', 42, true);
+SELECT pg_catalog.setval('quotes_id_seq', 65, true);

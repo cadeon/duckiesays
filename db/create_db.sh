@@ -39,8 +39,8 @@ echo "Creating schema..."
 psql -U postgres -h 127.0.0.1 -d duckiedb -f create_tables.sql
 echo "...done"
 
-## TEST DATA INSERTION
+## DATA INSERTION
 ## uncomment psql line below
-# echo "Creating test data..."
-# psql duckiedb < create_test_data.dmp
-# echo "...done"
+echo "Creating data..."
+psql duckiedb < create_db.dmp
+echo "...done"
