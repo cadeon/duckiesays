@@ -66,6 +66,6 @@ COPY quotes (id, says) FROM stdin;
 65	Explain it to me like I'm a duck.
 66	Measure twice, cut once.
 67	Check for failure modes introduced by old patterns.
-68	Try using a different search engine. Perhaps <a href="https;//duckduckgo.com">duckduckgo.com</a> ? 
+68	Try using a different search engine. Perhaps duckduckgo ? 
 \.
 SELECT pg_catalog.setval('quotes_id_seq', 68, true);
