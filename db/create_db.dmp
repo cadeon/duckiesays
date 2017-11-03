@@ -60,13 +60,11 @@ COPY quotes (id, says) FROM stdin;
 59	Quality > Quantity
 60	Don't save binaries in databases.
 61	Practice Duck-based Development.
-62	Build the company you want, from where you are now. 
+62	Build the company you want, from where you are now.
 63	Fix your bozo explosion.
 64	But first, coffee.
 65	Explain it to me like I'm a duck.
-66	Measure twice, cut once.
-67	Check for failure modes introduced by old patterns.
-68	Try using a different search engine. Perhaps duckduckgo ? 
-69	Good ideas are everywhere.
+66  Measure twice, cut once.
+67  It is impossible to produce at acceptable rates without production-intent tooling in place.
 \.
-SELECT pg_catalog.setval('quotes_id_seq', 69, true);
+SELECT pg_catalog.setval('quotes_id_seq', 67, true);
