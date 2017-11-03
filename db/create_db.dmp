@@ -64,7 +64,7 @@ COPY quotes (id, says) FROM stdin;
 63	Fix your bozo explosion.
 64	But first, coffee.
 65	Explain it to me like I'm a duck.
-66  Measure twice, cut once.
-67  It is impossible to produce at acceptable rates without production-intent tooling in place.
+66	Measure twice, cut once.
+67	It is impossible to produce at acceptable rates without production-intent tooling in place.
 \.
 SELECT pg_catalog.setval('quotes_id_seq', 67, true);
