@@ -66,5 +66,6 @@ COPY quotes (id, says) FROM stdin;
 65	Explain it to me like I'm a duck.
 66	Measure twice, cut once.
 67	It is impossible to produce at acceptable rates without production-intent tooling in place.
+68 	Design every system to expect, as an input, GARBAGE.
 \.
-SELECT pg_catalog.setval('quotes_id_seq', 67, true);
+SELECT pg_catalog.setval('quotes_id_seq', 68, true);
