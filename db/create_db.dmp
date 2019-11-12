@@ -1,72 +1,71 @@
-
-COPY quotes (id, says) FROM stdin;
-1	Don't try to teach a pig to sing. It wastes your time and annoys the pig.
-2	If there’s time to do it twice, there’s time to do it right.
-3	Sanitize your inputs.
-4	All averages eventually work out to zero.
-5	If it’s stupid, but it works, it’s not stupid (for now).
-6	If you can get pizza delivered there, it’s not secure.
-7	Components should be able to build and install themselves.
-8	Use a branch.
-9	Unit test it.
-10	Functions shouldn’t know things (that’s what data is for).
-11	Data shouldn’t do things (that’s what functions are for).
-12	The system should design and assemble itself.
-13	No.
-14	If it doesn’t run at the end of the sprint, the sprint failed.
-15	Your Story is too big.
-16	Your Epic is too broad.
-17	Your requirements suck. Fix those first, then fix the code.
-18	Make your comments consistent and readable.
-19	Your inconsistent indentation makes babies cry.
-20	Rebooting is *not* going to fix your time sync issue.
-21	Document your pull requests.
-22	Don’t break trunk/develop/master.
-23	Commit and push early and often.
-24	CI is the way.
-25	Do things better by not doing them.
-26	Is there an issue for that?
-27	Is there a wiki page for that?
-28	Yes.
-30	It's kinda fun to do the impossible.
-31	Simplify and add lightness.
-32	Perfection is achieved when there is nothing left to remove.
-33	What are the side-effects?
-34	You can break backwards compatibility (if you document it).
-35	It's missing a semicolon.
-36	Engineering is done with numbers. Analysis without numbers is only an opinion.
-37	Use HTTPS. It's good enough for Duckie, it's good enough for you.
-38	"Better" is the enemy of "good".
-39	An analysis appearing in print has no relationship to the likelihood of its being correct.
-40	You can't get to the moon by climbing successively taller trees.
-41	Do what you can, where you are, with what you have.
-42	You can't make it better until you make it work.
-43	Write down your experiences.
-44	Lock your screen.
-45	Sometimes you have to go through complexity to get to simplicity
-46	Not everyone thinks the same way you do.
-47	Draw something
-48	If you don't know what's valuable, stop working
-49	To-be without consideration of as-is is art. Connecting the as-is and the to-be is engineering.
-50	Assumptions are the cause of most problems.
-51	Planning for the future helps you make better decisions today.
-52	Agile without learning is just a to-do list.
-53	Every solution creates the need for 100 more.
-54	Problems cause solutions. Solutions cause problems. Causes cause both.
-55	Seize the much in the small.
-56	Reality is a grand confusion.
-57	When in doubt, measure the chaos.
-58	Sometimes the right tool really IS a hammer.
-59	Quality > Quantity
-60	Don't save binaries in databases.
-61	Practice Duck-based Development.
-62	Build the company you want, from where you are now.
-63	Fix your bozo explosion.
-64	But first, coffee.
-65	Explain it to me like I'm a duck.
-66	Measure twice, cut once.
-67	It is impossible to produce at acceptable rates without production-intent tooling in place.
-68 	Design every system to expect, as an input, GARBAGE.
-69	If it's not worth going to the office anymore, just don't.
-\.
-SELECT pg_catalog.setval('quotes_id_seq', 69, true);
+INSERT INTO 'quotes' ( 'id',
+                      'says' )
+VALUES (1, "Don't try to teach a pig to sing. It wastes your time and annoys the pig."),
+       (2, "If there’s time to do it twice, there’s time to do it right."),
+       (3, "Sanitize your inputs."),
+       (4, "All averages eventually work out to zero."),
+       (5, "If it’s stupid, but it works, it’s not stupid (for now)."),
+       (6, "If you can get pizza delivered there, it’s not secure."),
+       (7, "Components should be able to build and install themselves."),
+       (8, "Use a branch."),
+       (9, "Unit test it."),
+       (10, "Functions shouldn’t know things (that’s what data is for)."),
+       (11, "Data shouldn’t do things (that’s what functions are for)."),
+       (12, "The system should design and assemble itself."),
+       (13, "No."),
+       (14, "If it doesn’t run at the end of the sprint, the sprint failed."),
+       (15, "Your Story is too big."),
+       (16, "Your Epic is too broad."),
+       (17, "Your requirements suck. Fix those first, then fix the code."),
+       (18, "Make your comments consistent and readable."),
+       (19, "Your inconsistent indentation makes babies cry."),
+       (20, "Rebooting is *not* going to fix your time sync issue."),
+       (21, "Document your pull requests."),
+       (22, "Don’t break trunk/develop/master."),
+       (23, "Commit and push early and often."),
+       (24, "CI is the way."),
+       (25, "Do things better by not doing them."),
+       (26, "Is there an issue for that?"),
+       (27, "Is there a wiki page for that?"),
+       (28, "Yes."),
+       (30, "It's kinda fun to do the impossible."),
+       (31, "Simplify and add lightness."),
+       (32, "Perfection is achieved when there is nothing left to remove."),
+       (33, "What are the side-effects?"),
+       (34, "You can break backwards compatibility (if you document it)."),
+       (35, "It's missing a semicolon."),
+       (36, "Engineering is done with numbers. Analysis without numbers is only an opinion."),
+       (37, "Use HTTPS. It's good enough for Duckie, it's good enough for you."),
+       (38, "Better is the enemy of good."),
+       (39, "An analysis appearing in print has no relationship to the likelihood of its being correct."),
+       (40, "You can't get to the moon by climbing successively taller trees."),
+       (41, "Do what you can, where you are, with what you have."),
+       (42, "You can't make it better until you make it work."),
+       (43, "Write down your experiences."),
+       (44, "Lock your screen."),
+       (45, "Sometimes you have to go through complexity to get to simplicity"),
+       (46, "Not everyone thinks the same way you do."),
+       (47, "Draw something"),
+       (48, "If you don't know what's valuable, stop working"),
+       (49, "To-be without consideration of as-is is art. Connecting the as-is and the to-be is engineering."),
+       (50, "Assumptions are the cause of most problems."),
+       (51, "Planning for the future helps you make better decisions today."),
+       (52, "Agile without learning is just a to-do list."),
+       (53, "Every solution creates the need for 100 more."),
+       (54, "Problems cause solutions. Solutions cause problems. Causes cause both."),
+       (55, "Seize the much in the small."),
+       (56, "Reality is a grand confusion."),
+       (57, "When in doubt, measure the chaos."),
+       (58, "Sometimes the right tool really IS a hammer."),
+       (59, "Quality > Quantity"),
+       (60, "Don't save binaries in databases."),
+       (61, "Practice Duck-based Development."),
+       (62, "Build the company you want, from where you are now."),
+       (63, "Fix your bozo explosion."),
+       (64, "But first, coffee."),
+       (65, "Explain it to me like I'm a duck."),
+       (66, "Measure twice, cut once."),
+       (67, "It is impossible to produce at acceptable rates without production-intent tooling in place."),
+       (68, "Design every system to expect, as an input, GARBAGE."),
+       (69, "If it's not worth going to the office anymore, just don't.")
+       ;
