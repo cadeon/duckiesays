@@ -2,6 +2,7 @@
 node_modules
 .DS_store
 .vscode
+package-lock.json
 
 # Logs #
 log
