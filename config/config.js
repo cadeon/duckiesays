@@ -11,15 +11,8 @@ if (!fs.existsSync(logDir)) {
 
 winston.loggers.options.transports = [
   new winston.transports.DailyRotateFile({
-    name: 'access-log',
-    filename: `${logDir}/-access.log`,
-    datePattern: 'yyyy-MM-dd',
-    prepend: true,
-    level: (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') ? 'verbose' : 'info'
-  }),
-  new winston.transports.DailyRotateFile({
     name: 'error-log',
-    filename: `${logDir}/-error.log`,
+    filename: `${logDir}/duckiesays-error.log`,
     datePattern: 'yyyy-MM-dd',
     prepend: true,
     level: 'error',
