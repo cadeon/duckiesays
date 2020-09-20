@@ -35,6 +35,7 @@ div {
     border-bottom: 2px solid #EEE;
 }
 .box {
+    display: flex;
     margin: 3vh;
     color: whiteSmoke;
     font-size: 32px;
@@ -55,14 +56,7 @@ div {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-a:link {
-    color: #6495ED;
-    font-weight:bold;
-    font-family:Georgia, "Times New Roman", Times, serif;
-}
-
-/* visited link */
-a:visited {
+.footer a:any-link{
     color: #6495ED;
     font-weight:bold;
     font-family:Georgia, "Times New Roman", Times, serif;
@@ -70,25 +64,34 @@ a:visited {
 
 /* mouse over link */
 a:hover {
-    color: dodgerBlue;
     font-weight:bold;
-    font-family:Georgia, "Times New Roman", Times, serif;
-}
-
-/* selected link */
-a:active {
-    color: #6495ED;
-    font-weight:bold;
-    font-family:Georgia, "Times New Roman", Times, serif;
 }
 
 body {
   margin:0;
 }
-section.box {
-  flex: 1;
 
+.byline {
+    display: block;
+    margin: 3vh;
+    color: whitesmoke;
+    font-size: 14px;
+    text-align: right;
+    font-family:Arial, Helvetica, sans-serif;
+    height:auto;
 }
+.byline :any-link{
+    color:whitesmoke
+}
+#left {
+    float:left;
+    text-align:left;
+}
+#right {
+    float: right;
+    text-align: right;
+}
+
 </style>
 </head>
 
@@ -110,6 +113,11 @@ section.box {
         <a id=permalink href="">. . .</a>
   </div>
 
+  <div class="byline">
+    <a id=left href="https://medium.com/@chris_47577/duckie-says-write-down-your-experiences-8da5a07c41c3" target=_blank>what the duck?</a>
+    <a id=right href="http://liquidgenius.io" target=_blank>liquidgenius.io</a>
+  </div>
+
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
@@ -117,7 +125,7 @@ $( document ).ready(function () {
     var url = window.location.href;
     var id = url.match(/\/(\d+)$/);
 
-    var root = "https://" + window.location.host;
+    var root = window.location.protocol + "//" + window.location.host;
     var target = root +"/api/v1/says"
     if (id) {
         target += "/"+id[1];
