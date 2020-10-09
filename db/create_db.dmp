@@ -70,5 +70,5 @@ VALUES (1, "Don't try to teach a pig to sing. It wastes your time and annoys the
        (68, "Design every system to expect, as an input, GARBAGE."),
        (69, "If it's not worth going to the office anymore, just don't."),
        (70, "Make the right thing to do the easy thing to do."),
-       (71, "Don't be stupid."),
+       (71, "Don't be stupid.")
        ;
