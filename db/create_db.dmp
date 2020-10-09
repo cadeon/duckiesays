@@ -28,6 +28,7 @@ VALUES (1, "Don't try to teach a pig to sing. It wastes your time and annoys the
        (26, "Is there an issue for that?"),
        (27, "Is there a wiki page for that?"),
        (28, "Yes."),
+       (71, "Don't be evil."),
        (30, "It's kinda fun to do the impossible."),
        (31, "Simplify and add lightness."),
        (32, "Perfection is achieved when there is nothing left to remove."),
@@ -69,5 +70,5 @@ VALUES (1, "Don't try to teach a pig to sing. It wastes your time and annoys the
        (68, "Design every system to expect, as an input, GARBAGE."),
        (69, "If it's not worth going to the office anymore, just don't."),
        (70, "Make the right thing to do the easy thing to do."),
-       (71, "Don't be stupid.")
+       (71, "Don't be stupid."),
        ;
