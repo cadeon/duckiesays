@@ -1,50 +1,45 @@
-var Koa = require('koa');
-var Router = require('koa-router');
-var send   = require('koa-send');
-var serve  = require('koa-static-server');
-var config = require('./config/config');
-var convert = require('koa-convert');
-var dbConfig = require('./config/knex');
+const Koa = require('koa');
+const send = require('koa-send');
+const serve = require('koa-static');
+const config = require('./config/config');
+const winston = require('winston');
 
-var winston = require('winston');
-var logger = new winston.Logger({transports : winston.loggers.options.transports});
+const logger = winston.createLogger({ transports: winston.loggers.options.transports });
 
-var app = new Koa();
+const app = new Koa();
 
-app.use(require('koa-error')());
-app.use(convert(function *(next) {
-    try{
-      yield next;
-    }
-    catch (err) {
-      this.status = err.status || 500;
-      this.body = {'error':{
-        code:this.status,
-        message:err.message
-      }};
-    }
-  }));
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.status = err.status || 500;
+    ctx.body = {
+      error: {
+        code: ctx.status,
+        message: err.message,
+      },
+    };
+  }
+});
 
 app.keys = [config.secret];
 
-
 require('./app/routes')(app);
 
- app.use(convert( function *(next) {
-    const img = this.url.match(/\/img\/*/);
-    if (this. url === '/' || img ) {
-        yield next;
-    } else {
-        yield send(this, './public/index.html');
-    };
-})); 
+app.use(async (ctx, next) => {
+  const img = ctx.url.match(/\/img\/*/);
+  if (ctx.url === '/' || img) {
+    await next();
+  } else {
+    await send(ctx, './public/index.html');
+  }
+});
 
-app.use(serve({rootDir: 'public'}));
+app.use(serve('public'));
 
 logger.info('Server started');
 
-var server = app.listen(config.port);
-module.exports = app;
+const server = app.listen(config.port);
 module.exports = server; // support unit test
 
-console.log(process.env.NODE_ENV + ' server running at http://localhost:' + config.port);
+console.log(`${process.env.NODE_ENV} server running at http://localhost:${config.port}`);

@@ -1,5 +1,5 @@
-var port = 7007;
+const port = 7007;
 module.exports = {
-  port: port,
-  apiVersion: "v1",
+  port,
+  apiVersion: 'v2',
 };

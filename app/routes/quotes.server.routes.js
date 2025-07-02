@@ -1,15 +1,10 @@
-var config = require('../../config/config');
-var quotes = require('../../app/controllers/quotes.server.controller');
-var Router = require('koa-router');
+const quotes = require('../../app/controllers/quotes.server.controller');
+const Router = require('koa-router');
 
+const router = new Router();
+const apiversion = '/api/v2';
 
-module.exports = function(app) {
-  var router = new Router();
-	var apiversion = '/api/'+ config.apiVersion;
+router.get(`${apiversion}/says/:sayId`, quotes.getQuote);
+router.get(`${apiversion}/says`, quotes.getRandomQuote);
 
-	router.get(apiversion + '/says/:sayId',  quotes.getQuote);
-	router.get(apiversion + '/says',  quotes.getRandomQuote);
-
-	app.use(router.routes());
-	app.use(router.allowedMethods());	
-};
+module.exports = router;

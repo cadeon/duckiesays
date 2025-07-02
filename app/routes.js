@@ -1,8 +1,6 @@
-//var Mount = require('koa-mount');
-var config = require('../config/config');
+const quotesRouter = require('./routes/quotes.server.routes');
 
-module.exports = function(app) {
-  console.log('1');
-  require('./routes/quotes.server.routes')(app);
-  console.log('11');
+module.exports = function (app) {
+  app.use(quotesRouter.routes());
+  app.use(quotesRouter.allowedMethods());
 };

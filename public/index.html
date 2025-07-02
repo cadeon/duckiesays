@@ -131,7 +131,7 @@ $( document ).ready(function () {
     var id = url.match(/\/(\d+)$/);
 
     var root = window.location.protocol + "//" + window.location.host;
-    var target = root +"/api/v1/says"
+    var target = root +"/api/v2/says"
     if (id) {
         target += "/"+id[1];
     }

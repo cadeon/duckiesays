@@ -16,13 +16,13 @@ rm ../duckiedb.sqlite3
 ## CREATE EMPTY SCHEMA + LOOKUP TABLES
 echo "Creating schema..."
 
-sqlite3 ../duckiedb.sqlite3 < create_tables.sql
+sqlite3 ../duckiedb.sqlite3 < ./create_tables.sql
 
 echo "...done"
 
 ## DATA INSERTION
 ## uncomment psql line below
 echo "Creating data..."
-sqlite3 ../duckiedb.sqlite3 < create_db.dmp
+sqlite3 ../duckiedb.sqlite3 < ./create_db.dmp
 echo "...done"
 

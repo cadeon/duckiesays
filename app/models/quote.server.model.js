@@ -1,15 +1,19 @@
-var knex = require('../../config/knex');
-var debug = require('debug')('quote.model');
+const knex = require('../../config/knex');
+const debug = require('debug')('quote.model');
 
-
-exports.getSingleQuote = function(id) {
-  debug('getSingleQuote')
+const getSingleQuote = (id) => {
+  debug('getSingleQuote');
   return knex('quotes').select().where('id', id);
 };
 
-exports.getRandomQuote = function() {
-  debug('getRandomQuote')
+const getRandomQuote = () => {
+  debug('getRandomQuote');
   return knex('quotes').select().orderByRaw('RANDOM()').limit(1);
+};
+
+module.exports = {
+  getSingleQuote,
+  getRandomQuote,
 };
 
 
