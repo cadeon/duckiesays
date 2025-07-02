@@ -1,5 +1,9 @@
 #! /bin/sh
 
+# Get the directory of the script
+SCRIPT_DIR=$(dirname "$0")
+cd "$SCRIPT_DIR" || exit 1
+
 ## DATABASE CREATION
 #
 # Make sure ALL connections (app, pgAdmin) to db are disconnected before running
