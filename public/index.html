@@ -110,12 +110,11 @@ body {
   </div>
   <div class="container">
     <section>
-        <span class="box" id="quote">. . .</span>
+        <input type="text" id="prompt" name="prompt" size="50" placeholder="Ask Duckie a question...">
     </section>
   </div>
-
-  <div class="footer">
-        <a id=permalink href="">. . .</a>
+  <div class="container">
+      <div class="box" id="response"></div>
   </div>
 
   <div class="byline">
@@ -125,22 +124,40 @@ body {
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-
 $( document ).ready(function () {
-    var url = window.location.href;
-    var id = url.match(/\/(\d+)$/);
-
-    var root = window.location.protocol + "//" + window.location.host;
-    var target = root +"/api/v2/says"
-    if (id) {
-        target += "/"+id[1];
+    function submitPrompt() {
+        var prompt = $("#prompt").val();
+        if (prompt.trim() === "") {
+            return;
+        }
+        var root = window.location.protocol + "//" + window.location.host;
+        var target = root + "/api/v2/thinks";
+        $("#response").text(". . ."); // thinking indicator
+        $.ajax({
+            type: "POST",
+            url: target,
+            data: JSON.stringify({ prompt: prompt }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data){
+                $("#response").text(data.says);
+            },
+            error: function() {
+                $("#response").text("The duck is pondering... or perhaps napping.");
+            }
+        });
     }
-    $.getJSON(target, function(data){
-        $("#quote").text(data.says);
-        $("#permalink").attr("href",root+"/"+data.id);
-        $("#permalink").text(root+"/"+data.id);
-        $("#ducklink").attr("href",root);
-	history.pushState(null, null, root+"/"+data.id);
+
+    $("#prompt").keypress(function(event) {
+        if (event.which == 13) { // Enter key
+            event.preventDefault();
+            submitPrompt();
+        }
+    });
+
+    $("#ducklink").click(function(e){
+        e.preventDefault(); // prevent the link from navigating
+        submitPrompt();
     });
 })
 </script>

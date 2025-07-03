@@ -1,6 +1,6 @@
-const quotesRouter = require('./routes/quotes.server.routes');
+const thinksRouter = require('./routes/thinks.server.routes');
 
 module.exports = function (app) {
-  app.use(quotesRouter.routes());
-  app.use(quotesRouter.allowedMethods());
+	app.use(thinksRouter.routes());
+	app.use(thinksRouter.allowedMethods());
 };
