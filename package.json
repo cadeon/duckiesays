@@ -16,14 +16,10 @@
     "koa-router": "^12.0.1",
     "koa-send": "^5.0.1",
     "koa-static": "^5.0.0",
-    "lodash": "^4.17.21",
     "node-fetch": "^2.7.0",
-    "uuid": "^9.0.1",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
-  "description": "This API is a Node-based framework for RESTful service APIs.",
-  "main": "server.js",
   "devDependencies": {
     "chai": "^5.1.1",
     "chai-http": "^4.4.0",
@@ -34,14 +30,4 @@
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mpeter88/lgApp.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mpeter88/lgApp/issues"
-  },
-  "homepage": "https://github.com/mpeter88/lgApp#readme"
-}
+  "license": "MIT"

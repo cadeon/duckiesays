@@ -7,6 +7,8 @@
     <meta name="description" content="">
     <title>Duckie Says</title>
 
+    <link rel="icon" href="img/duckieblue.png" type="image/png">
+
 <style>
 body {
     background-color: #6495ED
@@ -16,6 +18,8 @@ div {
   align-items: center;
   justify-content: center;
 }
+
+
 
 .duckie {
     height: 200px;
@@ -28,16 +32,15 @@ div {
     -moz-border-radius-topright: 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    transition: transform .2s; /* Animation */
 }
 
-.duckie a:hover {
-    transform: scale(1.05); 
+
+.duckie img:hover {
+    transform: scale(1.05);
 }
 
 .container {
-    min-height: 10vh;
-    border-bottom: 2px solid #EEE;
+    min-height: 0;
 }
 .box {
     display: flex;
@@ -47,6 +50,7 @@ div {
     text-align: center;
     font-family:Georgia, "Times New Roman", Times, serif;
     height:auto;
+    width: 100%;
 }
 
 .footer {
@@ -67,34 +71,54 @@ div {
     font-family:Georgia, "Times New Roman", Times, serif;
 }
 
-/* mouse over link */
-a:hover {
-    font-weight:bold;
-}
-
 body {
   margin:0;
 }
 
 .byline {
+    border-top: 2px solid #EEE;
     display: block;
-    margin: 3vh;
     color: whitesmoke;
     font-size: 14px;
-    text-align: right;
     font-family:Arial, Helvetica, sans-serif;
     height:auto;
 }
 .byline :any-link{
     color:whitesmoke
 }
+.byline a:hover {
+    font-weight: bold;
+}
 #left {
     float:left;
     text-align:left;
+    margin:3vh;
 }
 #right {
     float: right;
     text-align: right;
+    margin:3vh;
+}
+
+#prompt {
+    background-color: #6495ED; /* Blend with background */
+    border: none; /* Remove default border */
+    font-size: 24px; /* Larger font */
+    font-weight: bold; /* Make text bolder */
+    color: #323131; 
+    text-align: center; /* Center text */
+    outline: none; /* Remove outline on focus */
+    width: 100%; /* Adjust width as needed */
+    box-sizing: border-box; /* Include padding in width */
+    min-height: auto;
+    resize: vertical; /* Allow vertical resizing */
+    overflow: auto; /* Handle content overflow */
+    padding: 5px; /* Add some padding */
+}
+
+#prompt::placeholder {
+    color: #323131; 
+    opacity: 0.5; /* Adjust opacity as needed */
 }
 
 </style>
@@ -104,22 +128,18 @@ body {
   <div class="duckie">
       <a href id="ducklink" border=0>
           <img src="img/pitr-Ducky-icon.svg"
-          onerror="this.src='img/pitr-Ducky-icon-300px.png'"
           alt="duckie" height="200" width="200"/>
       </a>
   </div>
   <div class="container">
-    <section>
-        <input type="text" id="prompt" name="prompt" size="50" placeholder="Ask Duckie a question...">
-    </section>
+    <textarea id="prompt" name="prompt" placeholder="Write to Duckie... Click the Duckie..."></textarea>
   </div>
   <div class="container">
       <div class="box" id="response"></div>
   </div>
-
   <div class="byline">
     <a id=left href="https://medium.com/@chris_47577/duckie-says-write-down-your-experiences-8da5a07c41c3" target=_blank>what the duck?</a>
-    <a id=right href="http://liquidgenius.io" target=_blank>liquidgenius.io</a>
+    <a id=right href="https://legacy.duckiesays.com" target=_blank>legacy duck</a>
   </div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -140,7 +160,11 @@ $( document ).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(data){
-                $("#response").text(data.says);
+                setTimeout(function() {
+                    var responseElement = $("#response");
+                    var responseElement = $("#response");
+                    responseElement.text(data.says);
+                }, 1000); // 1 second thinking delay
             },
             error: function() {
                 $("#response").text("The duck is pondering... or perhaps napping.");
@@ -148,8 +172,13 @@ $( document ).ready(function () {
         });
     }
 
-    $("#prompt").keypress(function(event) {
-        if (event.which == 13) { // Enter key
+    $("#prompt").on("input", function() {
+        this.style.height = "auto";
+        this.style.height = (this.scrollHeight) + "px";
+    });
+
+    $("#prompt").keydown(function(event) {
+        if (event.which == 13 && !event.shiftKey) { // Enter key without Shift
             event.preventDefault();
             submitPrompt();
         }

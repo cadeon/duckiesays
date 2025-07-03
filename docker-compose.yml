@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Map host port 3000 to container port 3000
+    volumes:
+      - ./log:/usr/src/app/log # Persist logs
+    environment:
+      NODE_ENV: development # Set Node.js environment to development
+      OLLAMA_API_URL: http://ollama:11434/api/generate # Ollama API URL
+      OLLAMA_MODEL: smollm2:135m # Ollama model
+    depends_on:
+      - ollama # Ensure ollama starts before the app
+
+  ollama:
+    image: ollama/ollama:latest # Use the latest Ollama image
+    ports:
+      - "11434:11434" # Expose Ollama port
+    volumes:
+      - ollama_data:/root/.ollama # Persist Ollama data
+
+volumes:
+  ollama_data: # Define a volume for Ollama data

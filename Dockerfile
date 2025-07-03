@@ -13,19 +13,10 @@ COPY . .
 # Install all dependencies
 RUN npm install
 
-# Install sqlite3
-RUN apt-get update && apt-get install -y sqlite3
 
-# Rebuild native modules to ensure they are compatible with the container's environment
-RUN npm rebuild
-
-# Generate the SQLite database by running the creation script
-# The script needs to be executable
-RUN chmod +x /usr/src/app/db/create_db.sh
-RUN /usr/src/app/db/create_db.sh
 
 # Expose the port the app runs on
-EXPOSE 7007
+EXPOSE 3000
 
 # Define the command to run the app
 CMD ["npm", "start"]
