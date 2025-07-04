@@ -35,7 +35,7 @@ const config = {
 	port: process.env.PORT || 3000,
 	apiVersion: 'v2',
 	ollama: {
-		apiUrl: process.env.OLLAMA_API_URL || 'http://localhost:11434/api/generate',
+		apiUrl: process.env.OLLAMA_API_URL || 'http://ollama:11434/api/generate',
 		model: process.env.OLLAMA_MODEL || 'qwen2.5:0.5b',
 		systemPrompt: (max_tokens, prompt) => `
 		You are a wise and ancient rubber duck, an oracle - but do not discuss yourself. 
