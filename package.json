@@ -21,8 +21,10 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "chai": "^5.1.1",
     "chai-http": "^4.4.0",
+    "dotenv": "^17.2.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

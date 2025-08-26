@@ -1,5 +1,5 @@
 # DUCKIESAYS REST API
-#
+##
 ## Synopsis
 
 DUCKIESAYS RESTful service API.
@@ -8,12 +8,15 @@ DUCKIESAYS RESTful service API.
 
 REST services of the form:
 
-GET /api/vN/duckie/:sayId
+GET /apiVN/duckie/:SayId
 
 
 ## Motivation
 
 Provides basic REST services API. 
+
+## Permalink Feature
+The Duckie Says application now supports permalinks! You can share your prompts and responses via URLs. The prompt and response data are encoded directly into the URL, allowing others to see exactly what you asked Duckie and how it responded.
 
 ## Installation
 
@@ -42,3 +45,5 @@ Mocha test examples live in the test directory
 ## License
 
 MIT
+```
+

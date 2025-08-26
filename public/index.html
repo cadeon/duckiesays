@@ -145,6 +145,66 @@ body {
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 $( document ).ready(function () {
+    // Get URL parameters
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(window.location.href);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+    
+    // Create permalink from current prompt and response
+    function createPermalink() {
+        var prompt = $("#prompt").val();
+        var response = $("#response").text();
+        
+        if (!prompt.trim()) return '';
+        
+        // Create a simple base64 encoded object
+        var data = {
+            prompt: prompt,
+            response: response
+        };
+        
+        try {
+            var json = JSON.stringify(data);
+            // URL-safe base64 encoding
+            var encoded = btoa(encodeURIComponent(json))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=/g, '');
+            return encoded;
+        } catch (e) {
+            console.error('Error creating permalink:', e);
+            return '';
+        }
+    }
+    
+    // Parse permalink and populate form
+    function parsePermalink() {
+        var permalink = getUrlParameter('p');
+        if (!permalink) return false;
+        
+        try {
+            // URL-safe base64 decoding
+            var decoded = decodeURIComponent(atob(permalink
+                .replace(/-/g, '+')
+                .replace(/_/g, '/')));
+            var data = JSON.parse(decoded);
+            
+            if (data.prompt) {
+                $("#prompt").val(data.prompt);
+                if (data.response) {
+                    $("#response").text(data.response);
+                }
+                return true;
+            }
+        } catch (e) {
+            console.error('Error parsing permalink:', e);
+        }
+        return false;
+    }
+    
     function submitPrompt() {
         var prompt = $("#prompt").val();
         if (prompt.trim() === "") {
@@ -162,8 +222,11 @@ $( document ).ready(function () {
             success: function(data){
                 setTimeout(function() {
                     var responseElement = $("#response");
-                    var responseElement = $("#response");
                     responseElement.text(data.says);
+                    
+                    // Update URL with permalink
+                    var newUrl = window.location.href.split('?')[0] + '?p=' + createPermalink();
+                    window.history.replaceState({}, '', newUrl);
                 }, 1000); // 1 second thinking delay
             },
             error: function() {
@@ -171,6 +234,9 @@ $( document ).ready(function () {
             }
         });
     }
+
+    // Check for permalink on page load
+    parsePermalink();
 
     $("#prompt").on("input", function() {
         this.style.height = "auto";
@@ -189,17 +255,6 @@ $( document ).ready(function () {
         submitPrompt();
     });
 })
-</script>
-<!-- GA - Should we trigger this at duck click too? -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-97418919-1', 'auto');
-  ga('send', 'pageview');
-
 </script>
 
 </body>
