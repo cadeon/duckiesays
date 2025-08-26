@@ -235,8 +235,29 @@ $( document ).ready(function () {
         });
     }
 
-    // Check for permalink on page load
-    parsePermalink();
+// Check for permalink on page load
+var permalinkParsed = parsePermalink();
+
+$("#prompt").on("input", function() {
+    this.style.height = "auto";
+    this.style.height = (this.scrollHeight) + "px";
+});
+
+// Handle paste events to resize properly
+$("#prompt").on("paste", function() {
+    var $this = $(this);
+    setTimeout(function() {
+        $this.trigger('input');
+    }, 10);
+});
+
+// Force resize after permalink parsing to ensure expansion
+if (permalinkParsed) {
+    setTimeout(function() {
+        $("#prompt").trigger('input');
+    }, 10);
+}
+
 
     $("#prompt").on("input", function() {
         this.style.height = "auto";
