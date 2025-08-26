@@ -182,7 +182,7 @@ $( document ).ready(function () {
     
     // Parse permalink and populate form
     function parsePermalink() {
-        var permalink = getUrlParameter('p');
+        var permalink = getUrlParameter('guru-meditation');
         if (!permalink) return false;
         
         try {
@@ -225,7 +225,7 @@ $( document ).ready(function () {
                     responseElement.text(data.says);
                     
                     // Update URL with permalink
-                    var newUrl = window.location.href.split('?')[0] + '?p=' + createPermalink();
+                    var newUrl = window.location.href.split('?')[0] + '?guru-meditation=' + createPermalink();
                     window.history.replaceState({}, '', newUrl);
                 }, 1000); // 1 second thinking delay
             },
