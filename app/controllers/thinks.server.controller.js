@@ -11,31 +11,50 @@ async function getResponse(ctx) {
 	const { prompt } = ctx.request.body;
 	logger.info('getResponse called', { prompt });
 
-	try {
-				const fullPrompt = config.ollama.systemPrompt(config.ollama.max_tokens, prompt);
+	if (!prompt) {
+		ctx.status = 400;
+		ctx.body = { error: 'Prompt is required' };
+		return;
+	}
 
-		const response = await fetch(config.ollama.apiUrl, {
+	try {
+		// Create a prompt string that works with LM Studio's API format
+		const fullPrompt = `${config.lmstudio.systemPrompt}\n\nUser: ${prompt}\nAssistant:`;
+
+		const requestBody = {
+			model: config.lmstudio.model,
+			prompt: fullPrompt, // This format works with LM Studio's API
+			max_tokens: config.lmstudio.max_tokens,
+			temperature: config.lmstudio.temperature,
+		};
+
+		logger.info('Sending request to LM Studio', { requestBody });
+
+		const response = await fetch(config.lmstudio.apiUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({
-				model: config.ollama.model,
-				prompt: fullPrompt,
-				stream: false, // Get the full response at once
-				options: {
-					temperature: config.ollama.temperature,
-					num_predict: config.ollama.max_tokens,
-				},
-			}),
+			body: JSON.stringify(requestBody),
 		});
 
 		if (!response.ok) {
-			throw new Error(`Ollama API returned an error: ${response.statusText}`);
+			const errorText = await response.text();
+			logger.error('LM Studio API error', { status: response.status, text: errorText });
+			throw new Error(`LM Studio API returned an error: ${response.statusText}`);
 		}
 
 		const data = await response.json();
-		const llmResponse = data.response.trim();
+		
+		logger.info('Received response from LM Studio', { data });
+
+		// Extract the text response
+		let llmResponse;
+		if (data.choices && data.choices[0] && data.choices[0].text) {
+			llmResponse = data.choices[0].text.trim();
+		} else {
+			throw new Error('Unexpected response format: no text field in choices');
+		}
 
 		ctx.body = { says: llmResponse };
 		logger.info('Got response', { fn: 'getResponse', prompt, response: llmResponse });
@@ -49,4 +68,3 @@ async function getResponse(ctx) {
 module.exports = {
 	getResponse,
 };
-

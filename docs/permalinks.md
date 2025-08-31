@@ -7,7 +7,7 @@ The permalink feature allows users to share their Duckie Says prompts and respon
 
 ### Creating a Permalink
 1. User submits a prompt to Duckie
-2. The application receives the response from Ollama
+2. The application receives the response from LM Studio
 3. Both the prompt and response are serialized into JSON format
 4. The JSON is encoded using URL-safe Base64 encoding
 5. The encoded string is added as a query parameter `p` to the current URL
@@ -48,3 +48,4 @@ https://duckiesays.com/?p=eyJwcm9tcHQiOiJIZWxsbyB3b3JsZCIsInJlc3BvbnNlIjoiQW5zd2
 - URLs have length limitations (browser dependent)
 - Very large prompts or responses may exceed URL capacity 
 - Special characters in text are properly encoded
+```
