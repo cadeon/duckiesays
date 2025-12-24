@@ -6,7 +6,9 @@ package-lock.json
 
 # Logs #
 log
+logs
 
 # Database backups #
 ####################
 backup*
+

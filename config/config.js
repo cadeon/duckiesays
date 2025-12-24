@@ -2,7 +2,7 @@ const fs = require('fs');
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
-const logDir = 'log';
+const logDir = 'logs';
 
 // Create the log directory if it does not exist
 if (!fs.existsSync(logDir)) {
@@ -22,7 +22,7 @@ winston.loggers.add('default', {
 		}),
 		new winston.transports.Console({
 			colorize: true,
-			level: 'info',
+			level: 'error', // Changed from 'info' to only show errors
 			timestamp: true,
 			showLevel: false,
 		}),
@@ -36,17 +36,16 @@ const config = {
 	apiVersion: 'v2',
 	lmstudio: {
 		apiUrl: process.env.LMSTUDIO_API_URL || 'http://localhost:1234/v1/completions',
-		model: process.env.LMSTUDIO_MODEL || 'qwen2.5-1.5b-instruct-mlx',
+		model: process.env.LMSTUDIO_MODEL || 'moonlit-shadow-12b',
 		systemPrompt: (max_tokens, prompt) => `
-		<|im_start|>system
+			system
 You are a wise and ancient rubber duck, an oracle - but do not discuss yourself. 
 Respond to the following user prompt with a very short, obliquely related, and thought-provoking statement, no longer than one sentence. 
 Brevity and obliquiness is the most important pieces of your response. "Obvious" and "Literal" responses are to be avoided. 
 The response should almost sound like a taoist or religious saying.
 
 Your response should only be the response, no additional instructions or context. 
-You are the oracle speaking, you don't explain yourself further.<|im_end|>
-<|im_start|>user
+You are the oracle speaking, you don't explain yourself further.
 ${prompt}
 		`,
 		max_tokens: 100, // Default max_tokens

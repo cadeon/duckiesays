@@ -2,6 +2,7 @@ const config = require('../../config/config');
 
 const winston = require('winston');
 const fetch = require('node-fetch');
+const { logConversation } = require('../../utils/conversationLogger');
 
 const logger = winston.loggers.get('default');
 
@@ -9,11 +10,16 @@ const logger = winston.loggers.get('default');
 
 async function getResponse(ctx) {
 	const { prompt } = ctx.request.body;
-	logger.info('getResponse called', { prompt });
+	// Removed verbose info logging - only errors will be logged
 
 	if (!prompt) {
 		ctx.status = 400;
 		ctx.body = { error: 'Prompt is required' };
+		logger.info('Bad request - missing prompt', { 
+      url: ctx.url,
+      method: ctx.method,
+      ip: ctx.ip || ctx.request.ip
+    });
 		return;
 	}
 
@@ -28,7 +34,7 @@ async function getResponse(ctx) {
 			temperature: config.lmstudio.temperature,
 		};
 
-		logger.info('Sending request to LM Studio', { requestBody });
+		// Removed verbose info logging - only errors will be logged
 
 		const response = await fetch(config.lmstudio.apiUrl, {
 			method: 'POST',
@@ -40,13 +46,19 @@ async function getResponse(ctx) {
 
 		if (!response.ok) {
 			const errorText = await response.text();
-			logger.error('LM Studio API error', { status: response.status, text: errorText });
+			logger.error('LM Studio API error', { 
+        status: response.status, 
+        text: errorText,
+        url: ctx.url,
+        method: ctx.method,
+        ip: ctx.ip || ctx.request.ip
+      });
 			throw new Error(`LM Studio API returned an error: ${response.statusText}`);
 		}
 
 		const data = await response.json();
 		
-		logger.info('Received response from LM Studio', { data });
+		// Removed verbose info logging - only errors will be logged
 
 		// Extract the text response
 		let llmResponse;
@@ -57,9 +69,27 @@ async function getResponse(ctx) {
 		}
 
 		ctx.body = { says: llmResponse };
-		logger.info('Got response', { fn: 'getResponse', prompt, response: llmResponse });
+		
+		// Log the conversation in a pretty format for later review, grouped by user
+		logConversation(prompt, llmResponse, ctx.ip || ctx.request.ip);
+		
+		logger.info('Got response', { 
+      fn: 'getResponse', 
+      prompt, 
+      response: llmResponse,
+      url: ctx.url,
+      method: ctx.method,
+      ip: ctx.ip || ctx.request.ip
+    });
 	} catch (err) {
-		logger.error('Error getting response', { fn: 'getResponse', prompt, error: err.message });
+		logger.error('Error getting response', { 
+      fn: 'getResponse', 
+      prompt, 
+      error: err.message,
+      url: ctx.url,
+      method: ctx.method,
+      ip: ctx.ip || ctx.request.ip
+    });
 		ctx.status = 500;
 		ctx.body = { error: 'Failed to get a response from the duck.' };
 	}
