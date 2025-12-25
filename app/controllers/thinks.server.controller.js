@@ -71,7 +71,8 @@ async function getResponse(ctx) {
 		ctx.body = { says: llmResponse };
 		
 		// Log the conversation in a pretty format for later review, grouped by user
-		logConversation(prompt, llmResponse, ctx.ip || ctx.request.ip);
+		const ip = ctx.ip || ctx.request.ip;
+		logConversation(prompt, llmResponse, ip);
 		
 		logger.info('Got response', { 
       fn: 'getResponse', 
@@ -79,16 +80,17 @@ async function getResponse(ctx) {
       response: llmResponse,
       url: ctx.url,
       method: ctx.method,
-      ip: ctx.ip || ctx.request.ip
+      ip: ip
     });
 	} catch (err) {
+		const ip = ctx.ip || ctx.request.ip;
 		logger.error('Error getting response', { 
       fn: 'getResponse', 
       prompt, 
       error: err.message,
       url: ctx.url,
       method: ctx.method,
-      ip: ctx.ip || ctx.request.ip
+      ip: ip
     });
 		ctx.status = 500;
 		ctx.body = { error: 'Failed to get a response from the duck.' };

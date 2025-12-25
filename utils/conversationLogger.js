@@ -27,7 +27,7 @@ function getUserIdentifier(ip) {
  * Logs a conversation (prompt and response) in a structured, pretty format with user identifier
  * @param {string} prompt - The user's input prompt  
  * @param {string} response - The LLM's response
- * @param {string} ip - User's IP address
+ * @param {string} ip - User's IP address (may be proxy IP in production environments)
  */
 function logConversation(prompt, response, ip) {
   const timestamp = new Date().toISOString();
@@ -41,14 +41,14 @@ function logConversation(prompt, response, ip) {
   const cleanResponse = response.replace(/\n/g, ' ').replace(/\r/g, '');
   
   // Append to the user's conversation log file with pretty formatting and whitespace
-  const formattedEntry = `\n=== Conversation at ${timestamp} ===\nUser: ${cleanPrompt}\nDuckie: ${cleanResponse}\n${'='.repeat(50)}\n`;
+  const formattedEntry = `\n=== Conversation at ${timestamp} ===\nPrompt: ${cleanPrompt}\nResponse: ${cleanResponse}\n${'='.repeat(50)}\n`;
   
   fs.appendFileSync(logFileName, formattedEntry);
 }
 
 /**
  * Reads all conversation logs for a specific user
- * @param {string} ip - User's IP address
+ * @param {string} ip - User's IP address (may be proxy IP in production environments)
  * @returns {Array} Array of conversation objects
  */
 function readUserConversations(ip) {
