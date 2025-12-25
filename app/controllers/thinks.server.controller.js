@@ -2,7 +2,7 @@ const config = require('../../config/config');
 
 const winston = require('winston');
 const fetch = require('node-fetch');
-const { logConversation } = require('../../utils/conversationLogger');
+const { logConversation } = require('../../src/utils/conversationLogger');
 
 const logger = winston.loggers.get('default');
 
@@ -17,8 +17,7 @@ async function getResponse(ctx) {
 		ctx.body = { error: 'Prompt is required' };
 		logger.info('Bad request - missing prompt', { 
       url: ctx.url,
-      method: ctx.method,
-      ip: ctx.ip || ctx.request.ip
+      method: ctx.method
     });
 		return;
 	}
@@ -50,8 +49,7 @@ async function getResponse(ctx) {
         status: response.status, 
         text: errorText,
         url: ctx.url,
-        method: ctx.method,
-        ip: ctx.ip || ctx.request.ip
+        method: ctx.method
       });
 			throw new Error(`LM Studio API returned an error: ${response.statusText}`);
 		}
@@ -70,27 +68,23 @@ async function getResponse(ctx) {
 
 		ctx.body = { says: llmResponse };
 		
-		// Log the conversation in a pretty format for later review, grouped by user
-		const ip = ctx.ip || ctx.request.ip;
-		logConversation(prompt, llmResponse, ip);
+		// Log the conversation in a pretty format for later review
+		logConversation(prompt, llmResponse);
 		
 		logger.info('Got response', { 
       fn: 'getResponse', 
       prompt, 
       response: llmResponse,
       url: ctx.url,
-      method: ctx.method,
-      ip: ip
+      method: ctx.method
     });
 	} catch (err) {
-		const ip = ctx.ip || ctx.request.ip;
 		logger.error('Error getting response', { 
       fn: 'getResponse', 
       prompt, 
       error: err.message,
       url: ctx.url,
-      method: ctx.method,
-      ip: ip
+      method: ctx.method
     });
 		ctx.status = 500;
 		ctx.body = { error: 'Failed to get a response from the duck.' };

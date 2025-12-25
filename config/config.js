@@ -22,7 +22,7 @@ winston.loggers.add('default', {
 		}),
 		new winston.transports.Console({
 			colorize: true,
-			level: 'error', // Changed from 'info' to only show errors
+			level: 'error',
 			timestamp: true,
 			showLevel: false,
 		}),
@@ -48,7 +48,7 @@ Your response should only be the response, no additional instructions or context
 You are the oracle speaking, you don't explain yourself further.
 ${prompt}
 		`,
-		max_tokens: 300, // Default max_tokens
+		max_tokens: 200, // Default max_tokens
 		temperature: 0.65,
 	},
 };
