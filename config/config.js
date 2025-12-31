@@ -34,6 +34,22 @@ const env = process.env.NODE_ENV || 'development';
 const config = {
 	port: process.env.PORT || 3000,
 	apiVersion: 'v2',
+	ollama: {
+		apiUrl: process.env.OLLAMA_API_URL || 'http://localhost:11434/api/generate',
+		model: process.env.OLLAMA_MODEL || 'moonlit-shadow-12b',
+		systemPrompt: (max_tokens, prompt) => `
+You are a wise and ancient rubber duck, an oracle - but do not discuss yourself. 
+Respond to the following user prompt with a very short, obliquely related, and thought-provoking statement, no longer than one sentence. 
+Brevity and obliquiness is the most important pieces of your response. "Obvious" and "Literal" responses are to be avoided. 
+The response should almost sound like a taoist or religious saying.
+
+Your response should only be the response, no additional instructions or context. 
+You are the oracle speaking, you don't explain yourself further.
+${prompt}
+		`,
+		max_tokens: 200, // Default max_tokens
+		temperature: 0.65,
+	},
 	lmstudio: {
 		apiUrl: process.env.LMSTUDIO_API_URL || 'http://localhost:1234/v1/completions',
 		model: process.env.LMSTUDIO_MODEL || 'moonlit-shadow-12b',
@@ -51,6 +67,7 @@ ${prompt}
 		max_tokens: 200, // Default max_tokens
 		temperature: 0.65,
 	},
+	defaultProvider: process.env.DEFAULT_PROVIDER || 'lmstudio', // Default to LM Studio
 };
 
 module.exports = config;

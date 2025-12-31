@@ -23,47 +23,93 @@ async function getResponse(ctx) {
 	}
 
 	try {
-		// Create a prompt string that works with LM Studio's API format
-		const fullPrompt = `${config.lmstudio.systemPrompt}\n\nUser: ${prompt}\nAssistant:`;
-
-		const requestBody = {
-			model: config.lmstudio.model,
-			prompt: fullPrompt, // This format works with LM Studio's API
-			max_tokens: config.lmstudio.max_tokens,
-			temperature: config.lmstudio.temperature,
-		};
-
-		// Removed verbose info logging - only errors will be logged
-
-		const response = await fetch(config.lmstudio.apiUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(requestBody),
-		});
-
-		if (!response.ok) {
-			const errorText = await response.text();
-			logger.error('LM Studio API error', { 
-        status: response.status, 
-        text: errorText,
-        url: ctx.url,
-        method: ctx.method
-      });
-			throw new Error(`LM Studio API returned an error: ${response.statusText}`);
+		// Determine which provider to use based on configuration
+		const selectedProvider = config.defaultProvider;
+		const providerConfig = config[selectedProvider];
+		
+		if (!providerConfig) {
+			throw new Error(`Unknown provider: ${selectedProvider}`);
 		}
 
-		const data = await response.json();
-		
-		// Removed verbose info logging - only errors will be logged
-
-		// Extract the text response
 		let llmResponse;
-		if (data.choices && data.choices[0] && data.choices[0].text) {
-			llmResponse = data.choices[0].text.trim();
+		
+		if (selectedProvider === 'ollama') {
+			// Format for Ollama API
+			const fullPrompt = providerConfig.systemPrompt(providerConfig.max_tokens, prompt);
+			
+			const requestBody = {
+				model: providerConfig.model,
+				prompt: fullPrompt,
+				max_tokens: providerConfig.max_tokens,
+				temperature: providerConfig.temperature,
+			};
+
+			const response = await fetch(providerConfig.apiUrl, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(requestBody),
+			});
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				logger.error('Ollama API error', { 
+          status: response.status, 
+          text: errorText,
+          url: ctx.url,
+          method: ctx.method
+        });
+				throw new Error(`Ollama API returned an error: ${response.statusText}`);
+			}
+
+			const data = await response.json();
+			
+			// Extract the text response from Ollama
+			if (data.response) {
+				llmResponse = data.response.trim();
+			} else {
+				throw new Error('Unexpected response format: no response field in Ollama data');
+			}
+			
 		} else {
-			throw new Error('Unexpected response format: no text field in choices');
+			// Format for LM Studio API (default)
+			const fullPrompt = `${providerConfig.systemPrompt}\n\nUser: ${prompt}\nAssistant:`; 
+
+			const requestBody = {
+				model: providerConfig.model,
+				prompt: fullPrompt, // This format works with LM Studio's API
+				max_tokens: providerConfig.max_tokens,
+				temperature: providerConfig.temperature,
+			};
+
+			const response = await fetch(providerConfig.apiUrl, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(requestBody),
+			});
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				logger.error('LM Studio API error', { 
+          status: response.status, 
+          text: errorText,
+          url: ctx.url,
+          method: ctx.method
+        });
+				throw new Error(`LM Studio API returned an error: ${response.statusText}`);
+			}
+
+			const data = await response.json();
+			
+			// Extract the text response from LM Studio
+			if (data.choices && data.choices[0] && data.choices[0].text) {
+				llmResponse = data.choices[0].text.trim();
+			} else {
+				throw new Error('Unexpected response format: no text field in choices');
+			}
 		}
 
 		ctx.body = { says: llmResponse };
