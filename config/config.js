@@ -2,6 +2,15 @@ const fs = require('fs');
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
+// Load environment variables from .env file if it exists
+if (process.env.NODE_ENV !== 'production') {
+	try {
+		require('dotenv').config();
+	} catch (err) {
+		console.warn('Could not load .env file - proceeding without it');
+	}
+}
+
 const logDir = 'logs';
 
 // Create the log directory if it does not exist
