@@ -21,6 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     font-family: Georgia, "Times New Roman", Times, serif;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .duckie {
@@ -96,7 +97,8 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
-    max-width: 100%;
+    width: 90%;
+    margin: 0 auto;
 }
 
 .byline {
@@ -107,8 +109,7 @@ body {
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
     padding: 12px 16px;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
-    margin-bottom: env(safe-area-inset-bottom);
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
 }
 
 .byline a {
