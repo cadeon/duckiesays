@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs/.fc35d2cb48090f2cf21321d0253b1a77c635cd2f-audit.json",
+    "files": [
+        {
+            "date": 1780928301926,
+            "name": "logs/guru-meditations.log.2026-06-08",
+            "hash": "3761af43635f2cc0e21e42136a141723094ecba18b7c6e941f4bb5a0258873bf"
+        }
+    ],
+    "hashType": "sha256"
+}

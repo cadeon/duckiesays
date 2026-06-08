@@ -1,9 +1,8 @@
-const config = require('./config');
+const path = require('path');
 const Knex = require('knex');
-
-console.log(`PG: ${config.pg_connection_string}`);
 
 module.exports = Knex({
   client: 'sqlite3',
-  connection: { filename: './duckiedb.sqlite3' },
+  connection: { filename: path.join(__dirname, '..', 'duckiedb.sqlite3') },
+  useNullAsDefault: true,
 });

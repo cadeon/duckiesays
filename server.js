@@ -1,45 +1,47 @@
 const Koa = require('koa');
 const send = require('koa-send');
 const serve = require('koa-static');
+const path = require('path');
 const config = require('./config/config');
 const winston = require('winston');
 
-const logger = winston.createLogger({ transports: winston.loggers.options.transports });
+const logger = winston.loggers.get('default');
 
 const app = new Koa();
 
 app.use(async (ctx, next) => {
-  try {
-    await next();
-  } catch (err) {
-    ctx.status = err.status || 500;
-    ctx.body = {
-      error: {
-        code: ctx.status,
-        message: err.message,
-      },
-    };
-  }
+	try {
+		await next();
+	} catch (err) {
+		const status = err.status || 500;
+		ctx.status = status;
+		logger.error('Request error', { status, message: err.message, stack: err.stack });
+		ctx.body = {
+			error: {
+				code: status,
+				message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+			},
+		};
+	}
 });
-
-app.keys = [config.secret];
 
 require('./app/routes')(app);
 
+const publicDir = path.join(__dirname, 'public');
+
 app.use(async (ctx, next) => {
-  const img = ctx.url.match(/\/img\/*/);
-  if (ctx.url === '/' || img) {
-    await next();
-  } else {
-    await send(ctx, './public/index.html');
-  }
+	if (ctx.url === '/' || /^\/img\//.test(ctx.url)) {
+		await next();
+	} else {
+		await send(ctx, 'index.html', { root: publicDir });
+	}
 });
 
-app.use(serve('public'));
+app.use(serve(publicDir, { index: 'index.html' }));
 
 logger.info('Server started');
 
 const server = app.listen(config.port);
 module.exports = server; // support unit test
 
-console.log(`${process.env.NODE_ENV} server running at http://localhost:${config.port}`);
+console.log(`server running at http://localhost:${config.port}`);

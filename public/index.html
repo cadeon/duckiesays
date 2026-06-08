@@ -2,14 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
     <title>Duckie Says</title>
 
 <style>
 body {
-    background-color: #6495ED
+    background-color: #6495ED;
+    margin: 0;
 }
 div {
   display: flex;
@@ -18,21 +17,16 @@ div {
 }
 
 .duckie {
-    height: 200px;
     border-bottom: 2px solid #EEE;
     background-color: #6495ED;
     height: 200px;
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    transition: transform .2s; /* Animation */
+    transition: transform .2s;
 }
 
 .duckie a:hover {
-    transform: scale(1.05); 
+    transform: scale(1.05);
 }
 
 .container {
@@ -45,35 +39,27 @@ div {
     color: whiteSmoke;
     font-size: 32px;
     text-align: center;
-    font-family:Georgia, "Times New Roman", Times, serif;
-    height:auto;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    height: auto;
 }
 
 .footer {
-    right:5px;
+    right: 5px;
     left: 5px;
-    bottom:5px;
+    bottom: 5px;
     background-color: whiteSmoke;
     height: 30px;
-    margin-top:30px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    margin-top: 30px;
+    border-radius: 5px;
 }
-.footer a:any-link{
+.footer a:any-link {
     color: #6495ED;
-    font-weight:bold;
-    font-family:Georgia, "Times New Roman", Times, serif;
+    font-weight: bold;
+    font-family: Georgia, "Times New Roman", Times, serif;
 }
 
-/* mouse over link */
 a:hover {
-    font-weight:bold;
-}
-
-body {
-  margin:0;
+    font-weight: bold;
 }
 
 .byline {
@@ -82,21 +68,20 @@ body {
     color: whitesmoke;
     font-size: 14px;
     text-align: right;
-    font-family:Arial, Helvetica, sans-serif;
-    height:auto;
+    font-family: Arial, Helvetica, sans-serif;
+    height: auto;
 }
-.byline :any-link{
-    color:whitesmoke
+.byline :any-link {
+    color: whitesmoke;
 }
 #left {
-    float:left;
-    text-align:left;
+    float: left;
+    text-align: left;
 }
 #right {
     float: right;
     text-align: right;
 }
-
 </style>
 </head>
 
@@ -115,45 +100,34 @@ body {
   </div>
 
   <div class="footer">
-        <a id=permalink href="">. . .</a>
+        <a id="permalink" href="">. . .</a>
   </div>
 
   <div class="byline">
-    <a id=left href="https://medium.com/@chris_47577/duckie-says-write-down-your-experiences-8da5a07c41c3" target=_blank>what the duck?</a>
-    <a id=right href="http://liquidgenius.io" target=_blank>liquidgenius.io</a>
+    <a id="left" href="https://medium.com/@chris_47577/duckie-says-write-down-your-experiences-8da5a07c41c3" target="_blank" rel="noopener">what the duck?</a>
+    <a id="right" href="http://liquidgenius.io" target="_blank" rel="noopener">liquidgenius.io</a>
   </div>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript">
-
-$( document ).ready(function () {
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function () {
     var url = window.location.href;
     var id = url.match(/\/(\d+)$/);
 
     var root = window.location.protocol + "//" + window.location.host;
-    var target = root +"/api/v2/says"
+    var target = root + "/api/v2/says";
     if (id) {
-        target += "/"+id[1];
+        target += "/" + id[1];
     }
-    $.getJSON(target, function(data){
+    $.getJSON(target, function(data) {
         $("#quote").text(data.says);
-        $("#permalink").attr("href",root+"/"+data.id);
-        $("#permalink").text(root+"/"+data.id);
-        $("#ducklink").attr("href",root);
-	history.pushState(null, null, root+"/"+data.id);
+        var permalink = root + "/" + data.id;
+        $("#permalink").attr("href", permalink);
+        $("#permalink").text(permalink);
+        $("#ducklink").attr("href", root);
+        history.pushState(null, null, permalink);
     });
-})
-</script>
-<!-- GA - Should we trigger this at duck click too? -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-97418919-1', 'auto');
-  ga('send', 'pageview');
-
+});
 </script>
 
 </body>

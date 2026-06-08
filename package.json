@@ -3,46 +3,28 @@
   "version": "2.0.0",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "test": "mocha",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "@koa/cors": "^5.0.0",
     "debug": "^4.3.4",
     "knex": "^3.1.0",
     "koa": "^2.15.3",
     "koa-router": "^12.0.1",
     "koa-send": "^5.0.1",
     "koa-static": "^5.0.0",
-    "lodash": "^4.17.21",
-    "pg-promise": "^11.8.0",
     "sqlite3": "^5.1.7",
-    "uuid": "^9.0.1",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
-  "description": "This API is a Node-based framework for RESTful service APIs.",
+  "description": "Duckie Says - a rubber duck oracle",
   "main": "server.js",
-  "devDependencies": {
-    "chai": "^5.1.1",
-    "chai-http": "^4.4.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "mocha": "^10.4.0",
-    "nodemon": "^3.1.0",
-    "prettier": "^3.2.5"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mpeter88/lgApp.git"
+    "url": "git+https://github.com/cadeon/duckiesays.git"
   },
-  "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mpeter88/lgApp/issues"
+    "url": "https://github.com/cadeon/duckiesays/issues"
   },
-  "homepage": "https://github.com/mpeter88/lgApp#readme"
+  "homepage": "https://github.com/cadeon/duckiesays#readme"
 }

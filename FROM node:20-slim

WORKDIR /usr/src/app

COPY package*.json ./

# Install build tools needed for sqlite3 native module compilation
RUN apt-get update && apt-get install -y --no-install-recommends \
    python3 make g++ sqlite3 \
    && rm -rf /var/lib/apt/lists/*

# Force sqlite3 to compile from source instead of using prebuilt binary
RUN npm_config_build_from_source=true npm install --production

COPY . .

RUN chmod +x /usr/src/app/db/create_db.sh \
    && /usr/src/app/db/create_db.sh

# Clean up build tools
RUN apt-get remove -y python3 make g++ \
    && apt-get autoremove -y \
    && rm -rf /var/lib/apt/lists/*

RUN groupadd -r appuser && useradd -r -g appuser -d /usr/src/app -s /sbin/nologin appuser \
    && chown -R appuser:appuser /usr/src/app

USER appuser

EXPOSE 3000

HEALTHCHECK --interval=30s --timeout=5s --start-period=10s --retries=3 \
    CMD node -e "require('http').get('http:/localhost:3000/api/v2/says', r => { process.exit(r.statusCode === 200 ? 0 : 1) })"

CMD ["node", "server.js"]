@@ -3,15 +3,24 @@ FROM node:20-slim
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm install --production
+
+# Install build tools needed for sqlite3 native module compilation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 make g++ sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Force sqlite3 to compile from source instead of using prebuilt binary
+RUN npm_config_build_from_source=true npm install --production
 
 COPY . .
 
-RUN apt-get update && apt-get install -y --no-install-recommends sqlite3 \
-    && rm -rf /var/lib/apt/lists/*
-
 RUN chmod +x /usr/src/app/db/create_db.sh \
     && /usr/src/app/db/create_db.sh
+
+# Clean up build tools
+RUN apt-get remove -y python3 make g++ \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -r appuser && useradd -r -g appuser -d /usr/src/app -s /sbin/nologin appuser \
     && chown -R appuser:appuser /usr/src/app
