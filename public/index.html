@@ -67,6 +67,12 @@ body {
     opacity: 0.5;
 }
 
+.container hr {
+    border: none;
+    border-top: 2px solid rgba(255, 255, 255, 0.25);
+    margin: 0;
+}
+
 #response {
     flex: 1;
     display: flex;
@@ -127,6 +133,7 @@ body {
   </div>
   <div class="container">
     <textarea id="prompt" placeholder="Write to Duckie... Click the Duckie..."></textarea>
+    <hr>
     <div id="response"></div>
   </div>
   <div class="byline">
