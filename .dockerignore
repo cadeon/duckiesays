@@ -2,7 +2,7 @@ node_modules
 npm-debug.log
 .git
 .gitignore
-log
+logs
 .env
 README.md
 LICENSE
