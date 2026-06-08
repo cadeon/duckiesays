@@ -135,6 +135,58 @@ body {
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
+
+    // --- Permalink support ---
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(window.location.href);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    function createPermalinkData() {
+        var prompt = $("#prompt").val();
+        var response = $("#response").text();
+        if (!prompt.trim()) return '';
+        try {
+            var json = JSON.stringify({ prompt: prompt, response: response });
+            return btoa(encodeURIComponent(json))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=/g, '');
+        } catch (e) {
+            console.error('Error creating permalink:', e);
+            return '';
+        }
+    }
+
+    function parsePermalink() {
+        var permalink = getUrlParameter('p');
+        if (!permalink) return false;
+        try {
+            var decoded = decodeURIComponent(atob(permalink
+                .replace(/-/g, '+')
+                .replace(/_/g, '/')));
+            var data = JSON.parse(decoded);
+            if (data.prompt) {
+                $("#prompt").val(data.prompt);
+                if (data.response) {
+                    $("#response").text(data.response);
+                }
+                // Auto-resize textarea to fit loaded prompt
+                $("#prompt")[0].style.height = "auto";
+                $("#prompt")[0].style.height = ($("#prompt")[0].scrollHeight) + "px";
+                return true;
+            }
+        } catch (e) {
+            console.error('Error parsing permalink:', e);
+        }
+        return false;
+    }
+
+    // Check for permalink on page load
+    parsePermalink();
+
     function submitPrompt() {
         var prompt = $("#prompt").val();
         if (prompt.trim() === "") {
@@ -152,6 +204,12 @@ $(document).ready(function () {
             success: function (data) {
                 setTimeout(function () {
                     $("#response").text(data.says);
+                    // Update URL with permalink
+                    var encoded = createPermalinkData();
+                    if (encoded) {
+                        var newUrl = window.location.href.split('?')[0] + '?p=' + encoded;
+                        window.history.replaceState({}, '', newUrl);
+                    }
                 }, 1000);
             },
             error: function () {
