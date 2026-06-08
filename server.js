@@ -2,6 +2,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const send = require('koa-send');
 const serve = require('koa-static');
+const path = require('path');
 const config = require('./config/config');
 const winston = require('winston');
 
@@ -28,15 +29,17 @@ app.use(async (ctx, next) => {
 
 require('./app/routes')(app);
 
+const publicDir = path.join(__dirname, 'public');
+
 app.use(async (ctx, next) => {
 	if (ctx.url === '/' || /^\/img\//.test(ctx.url)) {
 		await next();
 	} else {
-		await send(ctx, './public/index.html');
+		await send(ctx, 'index.html', { root: publicDir });
 	}
 });
 
-app.use(serve('public', { index: 'index.html' }));
+app.use(serve(publicDir, { index: 'index.html' }));
 
 logger.info('Server started');
 
