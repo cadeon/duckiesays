@@ -8,9 +8,6 @@ if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
 }
 
-// Base URL for permalinks — override via DUCKIE_BASE_URL env var
-const baseUrl = process.env.DUCKIE_BASE_URL || 'https://duckiesays.com';
-
 function encodePermalink(prompt, response) {
   try {
     var json = JSON.stringify({ prompt, response });
@@ -23,12 +20,17 @@ function encodePermalink(prompt, response) {
   }
 }
 
-function logConversation(prompt, response) {
+function baseUrl(ctx) {
+  const proto = ctx.secure ? 'https' : 'http';
+  return `${proto}://${ctx.host}`;
+}
+
+function logConversation(ctx, prompt, response) {
   const cleanPrompt = prompt.replace(/\n/g, ' ').replace(/\r/g, '').trim();
   const cleanResponse = response.replace(/\n/g, ' ').replace(/\r/g, '').trim();
 
   const encoded = encodePermalink(cleanPrompt, cleanResponse);
-  const permalink = `${baseUrl}/?guru_meditation=${encoded}`;
+  const permalink = `${baseUrl(ctx)}/?guru_meditation=${encoded}`;
 
   const entry = [
     `=== ${new Date().toISOString()} ===`,

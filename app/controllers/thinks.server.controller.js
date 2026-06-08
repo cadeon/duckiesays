@@ -63,7 +63,7 @@ async function getResponse(ctx) {
 		const llmResponse = data.choices[0].message.content.trim();
 
 		ctx.body = { says: llmResponse };
-			logConversation(trimmed, llmResponse);
+			logConversation(ctx, trimmed, llmResponse);
 			logger.info('Got response', { fn: 'getResponse', prompt: trimmed, response: llmResponse });
 	} catch (err) {
 		logger.error('Error getting response', { fn: 'getResponse', prompt: trimmed, error: err.message });

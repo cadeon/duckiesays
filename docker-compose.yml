@@ -11,7 +11,6 @@ services:
       - NODE_ENV=production
       - LLM_API_URL=https://llm.not-really.me/v1/chat/completions
       - LLM_MODEL=qwen-35b-a3b
-      - DUCKIE_BASE_URL=https://duckiesays.com
     restart: unless-stopped
     volumes:
       - ./logs:/usr/src/app/logs
