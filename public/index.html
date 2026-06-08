@@ -47,8 +47,9 @@ body {
 }
 
 #prompt {
-    background-color: #6495ED;
-    border: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
     font-size: 24px;
     font-weight: bold;
     color: #323131;
@@ -60,6 +61,12 @@ body {
     resize: none;
     min-height: 60px;
     line-height: 1.4;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+#prompt:focus {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
 #prompt::placeholder {

@@ -2,6 +2,7 @@ const config = require('../../config/config');
 
 const winston = require('winston');
 const fetch = require('node-fetch');
+const { logConversation } = require('../../utils/conversationLogger');
 
 const logger = winston.loggers.get('default');
 
@@ -62,7 +63,8 @@ async function getResponse(ctx) {
 		const llmResponse = data.choices[0].message.content.trim();
 
 		ctx.body = { says: llmResponse };
-		logger.info('Got response', { fn: 'getResponse', prompt: trimmed, response: llmResponse });
+			logConversation(trimmed, llmResponse);
+			logger.info('Got response', { fn: 'getResponse', prompt: trimmed, response: llmResponse });
 	} catch (err) {
 		logger.error('Error getting response', { fn: 'getResponse', prompt: trimmed, error: err.message });
 		if (err.name === 'AbortError') {
