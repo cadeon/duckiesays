@@ -1,27 +1,27 @@
 version: '3.8'
 
 services:
-  app:
+  duckiesays:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000" # Map host port 3000 to container port 3000
-    volumes:
-      - ./log:/usr/src/app/log # Persist logs
+      - "3999:3000"
     environment:
-      NODE_ENV: development # Set Node.js environment to development
-      OLLAMA_API_URL: http://ollama:11434/api/generate # Ollama API URL
-      OLLAMA_MODEL: smollm2:135m # Ollama model
-    depends_on:
-      - ollama # Ensure ollama starts before the app
-
-  ollama:
-    image: ollama/ollama:latest # Use the latest Ollama image
-    ports:
-      - "11434:11434" # Expose Ollama port
-    volumes:
-      - ollama_data:/root/.ollama # Persist Ollama data
-
-volumes:
-  ollama_data: # Define a volume for Ollama data
+      - NODE_ENV=production
+      - LLM_API_URL=https://llm.not-really.me/v1/chat/completions
+      - LLM_MODEL=qwen-35b-a3b
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/v2/thinks"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 64M

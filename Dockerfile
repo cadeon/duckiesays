@@ -1,22 +1,14 @@
-# Use an official Node.js runtime as a parent image
-FROM node:20-slim
+FROM node:20-alpine
 
-# Set the working directory in the container
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Copy the rest of the application code
+RUN npm ci --only=production
 COPY . .
 
-# Install all dependencies
-RUN npm install
+RUN chown -R appuser:appgroup /usr/src/app
+USER appuser
 
-
-
-# Expose the port the app runs on
 EXPOSE 3000
-
-# Define the command to run the app
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

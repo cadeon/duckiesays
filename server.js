@@ -8,29 +8,28 @@ const winston = require('winston');
 const logger = winston.loggers.get('default');
 
 const app = new Koa();
-app.use(bodyParser());
+app.use(bodyParser({ enableTypes: ['json'], jsonLimit: '1mb' }));
 
 app.use(async (ctx, next) => {
 	try {
 		await next();
 	} catch (err) {
-		ctx.status = err.status || 500;
+		const status = err.status || 500;
+		ctx.status = status;
+		logger.error('Request error', { status, message: err.message, stack: err.stack });
 		ctx.body = {
 			error: {
-				code: ctx.status,
-				message: err.message,
+				code: status,
+				message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
 			},
 		};
 	}
 });
 
-app.keys = [config.secret];
-
 require('./app/routes')(app);
 
 app.use(async (ctx, next) => {
-	const img = ctx.url.match(/\/img\/*/);
-	if (ctx.url === '/' || img) {
+	if (ctx.url === '/' || /^\/img\//.test(ctx.url)) {
 		await next();
 	} else {
 		await send(ctx, './public/index.html');
