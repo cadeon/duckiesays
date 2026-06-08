@@ -9,20 +9,31 @@
     <link rel="icon" href="img/duckieblue.png" type="image/png">
 
 <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     background-color: #6495ED;
-    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 .duckie {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 200px;
-    border-bottom: 2px solid #EEE;
-    background-color: #6495ED;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    padding: 20px;
+}
+
+.duckie img {
+    width: 150px;
+    height: 150px;
+    transition: transform 0.2s ease;
 }
 
 .duckie img:hover {
@@ -30,39 +41,9 @@ body {
 }
 
 .container {
-    min-height: 0;
-}
-
-.box {
+    flex: 1;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 3vh;
-    color: whiteSmoke;
-    font-size: 32px;
-    text-align: center;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    height: auto;
-    width: 100%;
-}
-
-.byline {
-    border-top: 2px solid #EEE;
-    display: flex;
-    justify-content: space-between;
-    color: whitesmoke;
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 1vh 3vh;
-}
-
-.byline a {
-    color: whitesmoke;
-    text-decoration: none;
-}
-
-.byline a:hover {
-    font-weight: bold;
+    flex-direction: column;
 }
 
 #prompt {
@@ -74,17 +55,59 @@ body {
     text-align: center;
     outline: none;
     width: 100%;
-    box-sizing: border-box;
-    min-height: auto;
-    resize: vertical;
-    overflow: auto;
-    padding: 5px;
+    padding: 16px;
     font-family: Georgia, "Times New Roman", Times, serif;
+    resize: none;
+    min-height: 60px;
+    line-height: 1.4;
 }
 
 #prompt::placeholder {
     color: #323131;
     opacity: 0.5;
+}
+
+#response {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+    color: whitesmoke;
+    font-size: 28px;
+    text-align: center;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    line-height: 1.4;
+    min-height: 120px;
+}
+
+.byline {
+    border-top: 2px solid rgba(255,255,255,0.2);
+    display: flex;
+    justify-content: space-between;
+    color: whitesmoke;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 12px 16px;
+}
+
+.byline a {
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+.byline a:hover {
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .duckie img {
+        width: 200px;
+        height: 200px;
+    }
+    #response {
+        font-size: 32px;
+    }
 }
 </style>
 </head>
@@ -93,14 +116,12 @@ body {
   <div class="duckie">
       <a href="#" id="ducklink">
           <img src="img/pitr-Ducky-icon.svg"
-          alt="duckie" height="200" width="200"/>
+          alt="duckie"/>
       </a>
   </div>
   <div class="container">
-    <textarea id="prompt" name="prompt" placeholder="Write to Duckie... Click the Duckie..."></textarea>
-  </div>
-  <div class="container">
-      <div class="box" id="response"></div>
+    <textarea id="prompt" placeholder="Write to Duckie... Click the Duckie..."></textarea>
+    <div id="response"></div>
   </div>
   <div class="byline">
     <a href="https://medium.com/@chris_47577/duckie-says-write-down-your-experiences-8da5a07c41c3" target="_blank" rel="noopener">what the duck?</a>
