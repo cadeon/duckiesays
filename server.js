@@ -36,7 +36,7 @@ app.use(async (ctx, next) => {
 	}
 });
 
-app.use(serve('public'));
+app.use(serve('public', { index: 'index.html' }));
 
 logger.info('Server started');
 
