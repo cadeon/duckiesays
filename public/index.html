@@ -289,9 +289,14 @@ $(document).ready(function () {
     var lastImageDescription = null;
     var imageMode = false;
 
+    function updateToggleText() {
+        $("#toggleLink a").text(imageMode ? "or type words" : "or send an image");
+    }
+
     // --- Mode switching ---
     function enterImageMode() {
         imageMode = true;
+        updateToggleText();
         $("#prompt").addClass("hidden");
         $("#toggleLink").addClass("hidden");
         $("#imageArea").addClass("visible");
@@ -308,16 +313,21 @@ $(document).ready(function () {
         lastImageDescription = null;
         $("#prompt").removeClass("hidden");
         $("#toggleLink").removeClass("hidden");
+        updateToggleText();
         $("#imageArea").removeClass("visible");
         $("#imagePreview").removeClass("visible");
         $("#previewImg").attr("src", "");
         $("#imageInput").val('');
     }
 
-    // "or send an image" link
+    // "or send an image" / "or type words" link
     $("#toggleLink a").click(function(e) {
         e.preventDefault();
-        enterImageMode();
+        if (imageMode) {
+            exitImageMode();
+        } else {
+            enterImageMode();
+        }
     });
 
     // --- Image handling ---
