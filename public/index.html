@@ -300,6 +300,10 @@ $(document).ready(function () {
 
     function exitImageMode() {
         imageMode = false;
+        // Populate textarea with the image description if we have one
+        if (lastImageDescription) {
+            $("#prompt").val("responded to image of " + lastImageDescription);
+        }
         currentImageData = null;
         lastImageDescription = null;
         $("#prompt").removeClass("hidden");
@@ -447,7 +451,7 @@ $(document).ready(function () {
             success: function (data) {
                 setTimeout(function () {
                     $("#response").text(data.says);
-                    // Capture image description for permalink
+                    // Capture image description for permalink and textarea
                     if (data.imageDescription) {
                         lastImageDescription = data.imageDescription;
                     }
@@ -456,7 +460,7 @@ $(document).ready(function () {
                         var newUrl = window.location.href.split('?')[0] + '?guru_meditation=' + encoded;
                         window.history.replaceState({}, '', newUrl);
                     }
-                    lastImageDescription = null;
+                    // Don't clear lastImageDescription here — keep it for exitImageMode
                 }, 1000);
             },
             error: function () {
