@@ -325,6 +325,8 @@ $(document).ready(function () {
             $("#previewImg").attr("src", currentImageData);
             $("#imagePreview").addClass("visible");
             $("#imageDropZone").addClass("hidden");
+            // Auto-submit when image is loaded
+            submitPrompt();
         };
         reader.readAsDataURL(file);
     }
