@@ -51,7 +51,7 @@ body {
     background-color: rgba(255, 255, 255, 0.15);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 8px;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     color: #323131;
     text-align: center;
@@ -64,6 +64,9 @@ body {
     min-height: 60px;
     line-height: 1.4;
     transition: border-color 0.2s ease, background-color 0.2s ease;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 #prompt:focus {
@@ -201,6 +204,9 @@ body {
         width: 200px;
         height: 200px;
     }
+    #prompt {
+        font-size: 24px;
+    }
     #response {
         font-size: 32px;
     }
@@ -216,7 +222,7 @@ body {
       </a>
   </div>
   <div class="container">
-    <textarea id="prompt" placeholder="Write to Duckie... Drop an image... Click the Duckie..."></textarea>
+    <textarea id="prompt" placeholder="Write to Duckie or drop an image..."></textarea>
     <div class="add-image-link" id="addImageLink"><a>📷 add image</a></div>
     <input type="file" id="imageInput" accept="image/*">
     <div class="image-preview" id="imagePreview">
