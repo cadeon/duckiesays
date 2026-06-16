@@ -11,8 +11,8 @@ const logger = winston.loggers.get('default');
 
 const app = new Koa();
 
-// JSON body parser — larger limit for base64 image payloads
-app.use(bodyParser({ enableTypes: ['json'], jsonLimit: '10mb' }));
+// JSON body parser — 2MB limit (resized images are ~200KB base64)
+app.use(bodyParser({ enableTypes: ['json'], jsonLimit: '2mb' }));
 
 // Multer for multipart file uploads (image field)
 const storage = multer.memoryStorage();

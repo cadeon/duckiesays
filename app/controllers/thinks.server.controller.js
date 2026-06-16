@@ -4,6 +4,7 @@ const winston = require('winston');
 const fetch = require('node-fetch');
 const multer = require('multer');
 const { logConversation } = require('../../utils/conversationLogger');
+const { validateImage, sanitizePrompt } = require('../middleware/validate');
 
 const logger = winston.loggers.get('default');
 
@@ -138,34 +139,38 @@ async function describeImage(imageDataUrl) {
 }
 
 async function getResponse(ctx) {
-    const { prompt, image } = ctx.request.body;
-
-    const imageDataUrl = image && typeof image === 'string' ? image : null;
+    // Validate and sanitize inputs
+    var prompt = sanitizePrompt(ctx.request.body.prompt);
+    var imageDataUrl = null;
+    try {
+        imageDataUrl = validateImage(ctx.request.body.image);
+    } catch (err) {
+        ctx.status = 400;
+        ctx.body = { error: err.message };
+        return;
+    }
 
     // Allow image-only submission — text prompt is optional when there's an image
-    const hasPrompt = prompt && typeof prompt === 'string' && prompt.trim().length > 0;
-    if (!hasPrompt && !imageDataUrl) {
+    if (!prompt && !imageDataUrl) {
         ctx.status = 400;
         ctx.body = { error: 'A prompt or image is required.' };
         return;
     }
 
-    const trimmed = (prompt || '').trim();
-
-    logger.info('getResponse called', { prompt: trimmed, hasImage: !!imageDataUrl });
+    logger.info('getResponse called', { prompt, hasImage: !!imageDataUrl });
 
     try {
         // If prompt looks like a URL, fetch and extract text from it
-        let effectivePrompt = trimmed;
-        if (trimmed && !imageDataUrl && URL_PATTERN.test(trimmed)) {
+        let effectivePrompt = prompt;
+        if (prompt && !imageDataUrl && URL_PATTERN.test(prompt)) {
             try {
-                const content = await fetchUrlContent(trimmed);
+                const content = await fetchUrlContent(prompt);
                 if (content) {
                     effectivePrompt = content.substring(0, MAX_PROMPT_LENGTH);
-                    logger.info('URL prompt resolved', { url: trimmed, contentLength: content.length, effectiveLength: effectivePrompt.length });
+                    logger.info('URL prompt resolved', { url: prompt, contentLength: content.length, effectiveLength: effectivePrompt.length });
                 }
             } catch (err) {
-                logger.warn('URL fetch failed, using original prompt', { url: trimmed, error: err.message });
+                logger.warn('URL fetch failed, using original prompt', { url: prompt, error: err.message });
             }
         }
 
@@ -221,7 +226,7 @@ async function getResponse(ctx) {
         logConversation(ctx, effectivePrompt, llmResponse);
         logger.info('Got response', { fn: 'getResponse', prompt: effectivePrompt, response: llmResponse });
     } catch (err) {
-        logger.error('Error getting response', { fn: 'getResponse', prompt: trimmed, error: err.message });
+        logger.error('Error getting response', { fn: 'getResponse', prompt, error: err.message });
         if (err.name === 'AbortError') {
             ctx.status = 504;
             ctx.body = { error: 'The duck took too long to think.' };
