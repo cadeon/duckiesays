@@ -71,6 +71,11 @@ body {
     border-color: rgba(255, 255, 255, 0.6);
 }
 
+#prompt.dragover {
+    border-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
 #prompt::placeholder {
     color: #323131;
     opacity: 0.5;
@@ -101,52 +106,24 @@ body {
     margin: 0 auto;
 }
 
-/* Image upload area */
-.image-area {
+/* Hidden file input */
+#imageInput {
+    display: none;
+}
+
+/* Image preview row */
+.image-preview {
     width: 90%;
     margin: 0 auto 8px;
     display: none;
+    position: relative;
 }
 
-.image-area.has-image {
+.image-preview.visible {
     display: block;
 }
 
-#imageDropZone {
-    border: 2px dashed rgba(255, 255, 255, 0.4);
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
-    cursor: pointer;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-    position: relative;
-}
-
-#imageDropZone:hover,
-#imageDropZone.dragover {
-    border-color: rgba(255, 255, 255, 0.8);
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-#imageDropZone input[type="file"] {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-}
-
-#imagePreview {
-    margin-top: 8px;
-    display: none;
-    position: relative;
-}
-
-#imagePreview img {
+.image-preview img {
     max-width: 100%;
     max-height: 200px;
     border-radius: 8px;
@@ -173,28 +150,6 @@ body {
 
 #imageRemove:hover {
     background: rgba(0, 0, 0, 0.8);
-}
-
-/* Upload button */
-#uploadBtn {
-    margin: 0 auto 8px;
-    padding: 8px 16px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 8px;
-    color: whitesmoke;
-    font-size: 16px;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-#uploadBtn:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-#uploadBtn.visible {
-    display: block;
 }
 
 .byline {
@@ -237,17 +192,11 @@ body {
       </a>
   </div>
   <div class="container">
-    <textarea id="prompt" placeholder="Write to Duckie... Click the Duckie..."></textarea>
-    <button id="uploadBtn">📷 Add Image</button>
-    <div class="image-area" id="imageArea">
-      <div id="imageDropZone">
-        <span>Drop an image or click to upload</span>
-        <input type="file" id="imageInput" accept="image/*">
-      </div>
-      <div id="imagePreview">
-        <img id="previewImg" src="" alt="Preview">
-        <button id="imageRemove" title="Remove image">✕</button>
-      </div>
+    <textarea id="prompt" placeholder="Write to Duckie... Drop an image... Click the Duckie..."></textarea>
+    <input type="file" id="imageInput" accept="image/*">
+    <div class="image-preview" id="imagePreview">
+      <img id="previewImg" src="" alt="Preview">
+      <button id="imageRemove" title="Remove image">✕</button>
     </div>
     <hr>
     <div id="response"></div>
@@ -312,76 +261,63 @@ $(document).ready(function () {
 
     parsePermalink();
 
-    // --- Image upload ---
-    function showImageArea() {
-        $("#imageArea").addClass("has-image");
-        $("#uploadBtn").hide();
-    }
-
-    function hideImageArea() {
-        $("#imageArea").removeClass("has-image");
-        $("#imagePreview").hide();
-        $("#imageDropZone").show();
-        $("#imageInput").val('');
-        $("#uploadBtn").show();
-        currentImageData = null;
-    }
-
+    // --- Image handling ---
     function handleImageFile(file) {
         if (!file || !file.type.startsWith('image/')) return;
-
         var reader = new FileReader();
         reader.onload = function(e) {
-            currentImageData = e.target.result; // data URL
+            currentImageData = e.target.result;
             $("#previewImg").attr("src", currentImageData);
-            $("#imagePreview").show();
-            $("#imageDropZone").hide();
-            showImageArea();
+            $("#imagePreview").addClass("visible");
         };
         reader.readAsDataURL(file);
     }
 
-    $("#uploadBtn").click(function() {
-        showImageArea();
-        $("#imageInput").trigger("click");
-    });
+    function clearImage() {
+        currentImageData = null;
+        $("#imagePreview").removeClass("visible");
+        $("#previewImg").attr("src", "");
+        $("#imageInput").val('');
+    }
 
-    $("#imageInput").change(function(e) {
-        var file = e.target.files[0];
-        if (file) handleImageFile(file);
-    });
+    $("#imageRemove").click(clearImage);
 
-    // Drag and drop
-    $("#imageDropZone").on("dragover dragenter", function(e) {
+    // --- Drag and drop on textarea ---
+    $("#prompt").on("dragover dragenter", function(e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).addClass("dragover");
     });
 
-    $("#imageDropZone").on("dragleave drop", function(e) {
+    $("#prompt").on("dragleave drop", function(e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).removeClass("dragover");
         if (e.type === 'drop' && e.originalEvent.dataTransfer.files.length) {
-            handleImageFile(e.originalEvent.dataTransfer.files[0]);
+            var file = e.originalEvent.dataTransfer.files[0];
+            handleImageFile(file);
         }
     });
 
-    $("#imageRemove").click(function() {
-        hideImageArea();
+    // Also allow clicking the textarea to trigger file picker when empty
+    // (only if there's no text and no image yet)
+    $("#prompt").on("click", function(e) {
+        // Don't intercept — let normal text editing work.
+        // Users drag-drop images onto the textarea.
     });
 
     // --- Submit ---
     function submitPrompt() {
         var prompt = $("#prompt").val();
-        if (prompt.trim() === "") {
+        // Allow submission with just an image, no text required
+        if (prompt.trim() === "" && !currentImageData) {
             return;
         }
         var root = window.location.protocol + "//" + window.location.host;
         var target = root + "/api/v2/thinks";
         $("#response").text(". . .");
 
-        var payload = { prompt: prompt };
+        var payload = { prompt: prompt || "" };
         if (currentImageData) {
             payload.image = currentImageData;
         }

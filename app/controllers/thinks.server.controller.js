@@ -87,21 +87,24 @@ function buildMessages(prompt, imageDataUrl) {
 async function getResponse(ctx) {
     const { prompt, image } = ctx.request.body;
 
-    if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
+    const imageDataUrl = image && typeof image === 'string' ? image : null;
+
+    // Allow image-only submission — text prompt is optional when there's an image
+    const hasPrompt = prompt && typeof prompt === 'string' && prompt.trim().length > 0;
+    if (!hasPrompt && !imageDataUrl) {
         ctx.status = 400;
-        ctx.body = { error: 'A prompt is required.' };
+        ctx.body = { error: 'A prompt or image is required.' };
         return;
     }
 
-    const trimmed = prompt.trim();
-    const imageDataUrl = image && typeof image === 'string' ? image : null;
+    const trimmed = (prompt || '').trim();
 
     logger.info('getResponse called', { prompt: trimmed, hasImage: !!imageDataUrl });
 
     try {
         // If prompt looks like a URL, fetch and extract text from it
         let effectivePrompt = trimmed;
-        if (!imageDataUrl && URL_PATTERN.test(trimmed)) {
+        if (trimmed && !imageDataUrl && URL_PATTERN.test(trimmed)) {
             try {
                 const content = await fetchUrlContent(trimmed);
                 if (content) {
