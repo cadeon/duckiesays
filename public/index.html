@@ -331,18 +331,45 @@ $(document).ready(function () {
     });
 
     // --- Image handling ---
-    function handleImageFile(file) {
-        if (!file || !file.type.startsWith('image/')) return;
+    // Resize image to max 1024px on longest side, JPEG 0.8 quality
+    function resizeImage(file, callback) {
+        var img = new Image();
         var reader = new FileReader();
         reader.onload = function(e) {
-            currentImageData = e.target.result;
-            $("#previewImg").attr("src", currentImageData);
+            img.onload = function() {
+                var w = img.width;
+                var h = img.height;
+                var maxDim = 1024;
+                if (w <= maxDim && h <= maxDim) {
+                    // Already small enough — use as-is
+                    callback(e.target.result);
+                    return;
+                }
+                var ratio = Math.min(maxDim / w, maxDim / h);
+                var newW = Math.round(w * ratio);
+                var newH = Math.round(h * ratio);
+                var canvas = document.createElement('canvas');
+                canvas.width = newW;
+                canvas.height = newH;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, newW, newH);
+                callback(canvas.toDataURL('image/jpeg', 0.8));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function handleImageFile(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        resizeImage(file, function(resizedData) {
+            currentImageData = resizedData;
+            $("#previewImg").attr("src", resizedData);
             $("#imagePreview").addClass("visible");
             $("#imageDropZone").addClass("hidden");
             // Auto-submit when image is loaded
             submitPrompt();
-        };
-        reader.readAsDataURL(file);
+        });
     }
 
     // Click drop zone opens file picker
