@@ -264,7 +264,6 @@ body {
   </div>
   <div class="container">
     <textarea id="prompt" placeholder="Write to Duckie..."></textarea>
-    <div class="toggle-link" id="toggleLink"><a>or send an image</a></div>
     <div class="image-area" id="imageArea">
       <div id="imageDropZone">📷 tap to choose an image</div>
       <div id="imagePreview">
@@ -272,6 +271,7 @@ body {
         <button id="imageRemove" title="Remove image">✕</button>
       </div>
     </div>
+    <div class="toggle-link" id="toggleLink"><a>or send an image</a></div>
     <input type="file" id="imageInput" accept="image/*">
     <hr>
     <div id="response"></div>
@@ -290,7 +290,7 @@ $(document).ready(function () {
     var imageMode = false;
 
     function updateToggleText() {
-        $("#toggleLink a").text(imageMode ? "or type words" : "or send an image");
+        $("#toggleLink a").text(imageMode ? "or send words" : "or send an image");
     }
 
     // --- Mode switching ---
@@ -298,7 +298,6 @@ $(document).ready(function () {
         imageMode = true;
         updateToggleText();
         $("#prompt").addClass("hidden");
-        $("#toggleLink").addClass("hidden");
         $("#imageArea").addClass("visible");
         $("#imageDropZone").removeClass("hidden");
     }
@@ -312,7 +311,6 @@ $(document).ready(function () {
         currentImageData = null;
         lastImageDescription = null;
         $("#prompt").removeClass("hidden");
-        $("#toggleLink").removeClass("hidden");
         updateToggleText();
         $("#imageArea").removeClass("visible");
         $("#imagePreview").removeClass("visible");
