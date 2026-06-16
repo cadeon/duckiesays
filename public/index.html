@@ -47,6 +47,7 @@ body {
     flex-direction: column;
 }
 
+/* Text input mode */
 #prompt {
     background-color: rgba(255, 255, 255, 0.15);
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -69,14 +70,13 @@ body {
     hyphens: auto;
 }
 
+#prompt.hidden {
+    display: none;
+}
+
 #prompt:focus {
     background-color: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.6);
-}
-
-#prompt.dragover {
-    border-color: rgba(255, 255, 255, 0.9);
-    background-color: rgba(255, 255, 255, 0.35);
 }
 
 #prompt::placeholder {
@@ -84,8 +84,8 @@ body {
     opacity: 0.5;
 }
 
-/* Add image link */
-.add-image-link {
+/* Toggle link */
+.toggle-link {
     width: 90%;
     margin: 0 auto 4px;
     text-align: right;
@@ -93,19 +93,98 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.add-image-link a {
+.toggle-link.hidden {
+    display: none;
+}
+
+.toggle-link a {
     color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
-.add-image-link a:hover {
+.toggle-link a:hover {
     color: rgba(255, 255, 255, 0.9);
 }
 
-.add-image-link.hidden {
+/* Image mode — replaces the textarea */
+.image-area {
+    width: 90%;
+    margin: 0 auto 8px;
     display: none;
+    position: relative;
+}
+
+.image-area.visible {
+    display: block;
+}
+
+/* Drop zone shown before image is picked */
+#imageDropZone {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    padding: 30px 16px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#imageDropZone:hover,
+#imageDropZone.dragover {
+    border-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+#imageDropZone.hidden {
+    display: none;
+}
+
+/* Image preview after selection */
+#imagePreview {
+    display: none;
+    position: relative;
+}
+
+#imagePreview.visible {
+    display: block;
+}
+
+#imagePreview img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#imageRemove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+#imageRemove:hover {
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .container hr {
@@ -136,47 +215,6 @@ body {
 /* Hidden file input */
 #imageInput {
     display: none;
-}
-
-/* Image preview row */
-.image-preview {
-    width: 90%;
-    margin: 0 auto 8px;
-    display: none;
-    position: relative;
-}
-
-.image-preview.visible {
-    display: block;
-}
-
-.image-preview img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 8px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-#imageRemove {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-#imageRemove:hover {
-    background: rgba(0, 0, 0, 0.8);
 }
 
 .byline {
@@ -222,13 +260,16 @@ body {
       </a>
   </div>
   <div class="container">
-    <textarea id="prompt" placeholder="Write to Duckie or drop an image..."></textarea>
-    <div class="add-image-link" id="addImageLink"><a>📷 add image</a></div>
-    <input type="file" id="imageInput" accept="image/*">
-    <div class="image-preview" id="imagePreview">
-      <img id="previewImg" src="" alt="Preview">
-      <button id="imageRemove" title="Remove image">✕</button>
+    <textarea id="prompt" placeholder="Write to Duckie..."></textarea>
+    <div class="toggle-link" id="toggleLink"><a>or send an image</a></div>
+    <div class="image-area" id="imageArea">
+      <div id="imageDropZone">📷 tap to choose an image</div>
+      <div id="imagePreview">
+        <img id="previewImg" src="" alt="Preview">
+        <button id="imageRemove" title="Remove image">✕</button>
+      </div>
     </div>
+    <input type="file" id="imageInput" accept="image/*">
     <hr>
     <div id="response"></div>
   </div>
@@ -243,6 +284,79 @@ $(document).ready(function () {
 
     var currentImageData = null;
     var lastImageDescription = null;
+    var imageMode = false;
+
+    // --- Mode switching ---
+    function enterImageMode() {
+        imageMode = true;
+        $("#prompt").addClass("hidden");
+        $("#toggleLink").addClass("hidden");
+        $("#imageArea").addClass("visible");
+        $("#imageDropZone").removeClass("hidden");
+    }
+
+    function exitImageMode() {
+        imageMode = false;
+        currentImageData = null;
+        lastImageDescription = null;
+        $("#prompt").removeClass("hidden");
+        $("#toggleLink").removeClass("hidden");
+        $("#imageArea").removeClass("visible");
+        $("#imagePreview").removeClass("visible");
+        $("#previewImg").attr("src", "");
+        $("#imageInput").val('');
+    }
+
+    // "or send an image" link
+    $("#toggleLink a").click(function(e) {
+        e.preventDefault();
+        enterImageMode();
+    });
+
+    // --- Image handling ---
+    function handleImageFile(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            currentImageData = e.target.result;
+            $("#previewImg").attr("src", currentImageData);
+            $("#imagePreview").addClass("visible");
+            $("#imageDropZone").addClass("hidden");
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Click drop zone opens file picker
+    $("#imageDropZone").click(function() {
+        $("#imageInput").trigger("click");
+    });
+
+    // File selection
+    $("#imageInput").on("change", function(e) {
+        var file = e.target.files[0];
+        if (file) handleImageFile(file);
+    });
+
+    // Drag and drop on the drop zone
+    $("#imageDropZone").on("dragover dragenter", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass("dragover");
+    });
+
+    $("#imageDropZone").on("dragleave drop", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).removeClass("dragover");
+        if (e.type === 'drop' && e.originalEvent.dataTransfer.files.length) {
+            handleImageFile(e.originalEvent.dataTransfer.files[0]);
+        }
+    });
+
+    // Remove image — go back to text mode
+    $("#imageRemove").click(function() {
+        exitImageMode();
+    });
 
     // --- Permalink support ---
     function getUrlParameter(name) {
@@ -255,11 +369,9 @@ $(document).ready(function () {
     function createPermalinkData() {
         var prompt = $("#prompt").val();
         var response = $("#response").text();
-        // If there was an image, use the LLM-generated description as the prompt
+        // Image mode: use LLM description as the prompt
         var effectivePrompt = lastImageDescription
-            ? (prompt && prompt.trim()
-                ? prompt + " (responded to image of " + lastImageDescription + ")"
-                : "responded to image of " + lastImageDescription)
+            ? "responded to image of " + lastImageDescription
             : prompt;
         if (!effectivePrompt.trim()) return '';
         try {
@@ -299,73 +411,26 @@ $(document).ready(function () {
 
     parsePermalink();
 
-    // --- Image handling ---
-    function handleImageFile(file) {
-        if (!file || !file.type.startsWith('image/')) return;
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            currentImageData = e.target.result;
-            $("#previewImg").attr("src", currentImageData);
-            $("#imagePreview").addClass("visible");
-            $("#addImageLink").addClass("hidden");
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function clearImage() {
-        currentImageData = null;
-        lastImageDescription = null;
-        $("#imagePreview").removeClass("visible");
-        $("#previewImg").attr("src", "");
-        $("#imageInput").val('');
-        $("#addImageLink").removeClass("hidden");
-    }
-
-    $("#imageRemove").click(clearImage);
-
-    // Click "add image" link opens file picker
-    $("#addImageLink a").click(function(e) {
-        e.preventDefault();
-        $("#imageInput").trigger("click");
-    });
-
-    // Handle file selection
-    $("#imageInput").on("change", function(e) {
-        var file = e.target.files[0];
-        if (file) handleImageFile(file);
-    });
-
-    // --- Drag and drop on textarea ---
-    $("#prompt").on("dragover dragenter", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).addClass("dragover");
-    });
-
-    $("#prompt").on("dragleave drop", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).removeClass("dragover");
-        if (e.type === 'drop' && e.originalEvent.dataTransfer.files.length) {
-            var file = e.originalEvent.dataTransfer.files[0];
-            handleImageFile(file);
-        }
-    });
-
     // --- Submit ---
     function submitPrompt() {
         var prompt = $("#prompt").val();
-        // Allow submission with just an image, no text required
-        if (prompt.trim() === "" && !currentImageData) {
-            return;
+        // Text mode: need text. Image mode: need image.
+        if (imageMode) {
+            if (!currentImageData) return;
+        } else {
+            if (prompt.trim() === "") return;
         }
+
         var root = window.location.protocol + "//" + window.location.host;
         var target = root + "/api/v2/thinks";
         $("#response").text(". . .");
 
-        var payload = { prompt: prompt || "" };
-        if (currentImageData) {
+        var payload = {};
+        if (imageMode) {
+            payload.prompt = "";
             payload.image = currentImageData;
+        } else {
+            payload.prompt = prompt;
         }
 
         $.ajax({
@@ -386,7 +451,6 @@ $(document).ready(function () {
                         var newUrl = window.location.href.split('?')[0] + '?guru_meditation=' + encoded;
                         window.history.replaceState({}, '', newUrl);
                     }
-                    // Clear after permalink is set
                     lastImageDescription = null;
                 }, 1000);
             },
