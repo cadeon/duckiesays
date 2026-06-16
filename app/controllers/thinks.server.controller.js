@@ -65,14 +65,16 @@ function buildMessages(prompt, imageDataUrl) {
 
     if (imageDataUrl) {
         // Vision format: content is an array of parts
+        const textParts = [];
+        if (prompt) {
+            textParts.push({ type: 'text', text: prompt });
+        }
+        textParts.push({ type: 'image_url', image_url: { url: imageDataUrl } });
         return [
             { role: 'system', content: systemContent },
             {
                 role: 'user',
-                content: [
-                    { type: 'text', text: prompt },
-                    { type: 'image_url', image_url: { url: imageDataUrl } },
-                ],
+                content: textParts,
             },
         ];
     }
@@ -82,6 +84,57 @@ function buildMessages(prompt, imageDataUrl) {
         { role: 'system', content: systemContent },
         { role: 'user', content: prompt },
     ];
+}
+
+/**
+ * Ask the LLM for a one-line description of an image.
+ * Used for permalink generation — no image data stored, just a text summary.
+ */
+async function describeImage(imageDataUrl) {
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    if (config.llm.apiKey) {
+        headers['Authorization'] = `Bearer ${config.llm.apiKey}`;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+    try {
+        const response = await fetch(config.llm.apiUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                model: config.llm.model,
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'Describe the image in one short sentence. No preamble, no quotes, just the description.',
+                    },
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'text', text: 'What is in this image?' },
+                            { type: 'image_url', image_url: { url: imageDataUrl } },
+                        ],
+                    },
+                ],
+                max_tokens: 50,
+                temperature: 0.3,
+            }),
+            signal: controller.signal,
+        });
+
+        if (!response.ok) {
+            throw new Error(`LLM API returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+    } finally {
+        clearTimeout(timeoutId);
+    }
 }
 
 async function getResponse(ctx) {
@@ -154,7 +207,17 @@ async function getResponse(ctx) {
         const data = await response.json();
         const llmResponse = data.choices[0].message.content.trim();
 
-        ctx.body = { says: llmResponse };
+        // If there was an image, get a text description for permalink purposes
+        let imageDescription = null;
+        if (imageDataUrl) {
+            try {
+                imageDescription = await describeImage(imageDataUrl);
+            } catch (descErr) {
+                logger.warn('Image description failed', { error: descErr.message });
+            }
+        }
+
+        ctx.body = { says: llmResponse, imageDescription };
         logConversation(ctx, effectivePrompt, llmResponse);
         logger.info('Got response', { fn: 'getResponse', prompt: effectivePrompt, response: llmResponse });
     } catch (err) {

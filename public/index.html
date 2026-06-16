@@ -236,6 +236,7 @@ body {
 $(document).ready(function () {
 
     var currentImageData = null;
+    var lastImageDescription = null;
 
     // --- Permalink support ---
     function getUrlParameter(name) {
@@ -248,9 +249,13 @@ $(document).ready(function () {
     function createPermalinkData() {
         var prompt = $("#prompt").val();
         var response = $("#response").text();
-        if (!prompt.trim()) return '';
+        // If there was an image, use the LLM-generated description as the prompt
+        var effectivePrompt = lastImageDescription
+            ? "responded to image of " + lastImageDescription
+            : prompt;
+        if (!effectivePrompt.trim()) return '';
         try {
-            var json = JSON.stringify({ prompt: prompt, response: response });
+            var json = JSON.stringify({ prompt: effectivePrompt, response: response });
             return btoa(encodeURIComponent(json))
                 .replace(/\+/g, '-')
                 .replace(/\//g, '_')
@@ -301,6 +306,7 @@ $(document).ready(function () {
 
     function clearImage() {
         currentImageData = null;
+        lastImageDescription = null;
         $("#imagePreview").removeClass("visible");
         $("#previewImg").attr("src", "");
         $("#imageInput").val('');
@@ -363,11 +369,17 @@ $(document).ready(function () {
             success: function (data) {
                 setTimeout(function () {
                     $("#response").text(data.says);
+                    // Capture image description for permalink
+                    if (data.imageDescription) {
+                        lastImageDescription = data.imageDescription;
+                    }
                     var encoded = createPermalinkData();
                     if (encoded) {
                         var newUrl = window.location.href.split('?')[0] + '?guru_meditation=' + encoded;
                         window.history.replaceState({}, '', newUrl);
                     }
+                    // Clear after permalink is set
+                    lastImageDescription = null;
                 }, 1000);
             },
             error: function () {
