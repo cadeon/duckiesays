@@ -9,8 +9,8 @@ services:
       - "3999:3000"
     environment:
       - NODE_ENV=production
-      - LLM_API_URL=https://llm.not-really.me/v1/chat/completions
-      - LLM_MODEL=qwen-35b-a3b
+      - LLM_API_URL=http://172.30.250.65:8000/v1/chat/completions
+      - LLM_MODEL=qwen
     restart: unless-stopped
     volumes:
       - ./logs:/usr/src/app/logs

@@ -37,9 +37,9 @@ const config = {
 	port: process.env.PORT || 3000,
 	apiVersion: 'v2',
 	llm: {
-		apiUrl: process.env.LLM_API_URL || 'https://llm.not-really.me/v1/chat/completions',
+		apiUrl: process.env.LLM_API_URL || 'http://172.30.250.65:8000/v1/chat/completions',
 		apiKey: process.env.LLM_API_KEY || '',
-		model: process.env.LLM_MODEL || 'qwen-35b-a3b',
+		model: process.env.LLM_MODEL || 'qwen',
 		systemPrompt: (prompt) => `
 		You are a rubber duck oracle. Respond to the user's prompt with a short, thought-provoking statement — one or two sentences max.
 		Your response should directly address or relate to what the user said, delivered as a wise saying or aphorism. Think fortune cookie that actually understood the question.
