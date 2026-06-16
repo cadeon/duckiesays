@@ -81,6 +81,30 @@ body {
     opacity: 0.5;
 }
 
+/* Add image link */
+.add-image-link {
+    width: 90%;
+    margin: 0 auto 4px;
+    text-align: right;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.add-image-link a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.add-image-link a:hover {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.add-image-link.hidden {
+    display: none;
+}
+
 .container hr {
     border: none;
     border-top: 2px solid rgba(255, 255, 255, 0.25);
@@ -193,6 +217,7 @@ body {
   </div>
   <div class="container">
     <textarea id="prompt" placeholder="Write to Duckie... Drop an image... Click the Duckie..."></textarea>
+    <div class="add-image-link" id="addImageLink"><a>📷 add image</a></div>
     <input type="file" id="imageInput" accept="image/*">
     <div class="image-preview" id="imagePreview">
       <img id="previewImg" src="" alt="Preview">
@@ -269,6 +294,7 @@ $(document).ready(function () {
             currentImageData = e.target.result;
             $("#previewImg").attr("src", currentImageData);
             $("#imagePreview").addClass("visible");
+            $("#addImageLink").addClass("hidden");
         };
         reader.readAsDataURL(file);
     }
@@ -278,9 +304,22 @@ $(document).ready(function () {
         $("#imagePreview").removeClass("visible");
         $("#previewImg").attr("src", "");
         $("#imageInput").val('');
+        $("#addImageLink").removeClass("hidden");
     }
 
     $("#imageRemove").click(clearImage);
+
+    // Click "add image" link opens file picker
+    $("#addImageLink a").click(function(e) {
+        e.preventDefault();
+        $("#imageInput").trigger("click");
+    });
+
+    // Handle file selection
+    $("#imageInput").on("change", function(e) {
+        var file = e.target.files[0];
+        if (file) handleImageFile(file);
+    });
 
     // --- Drag and drop on textarea ---
     $("#prompt").on("dragover dragenter", function(e) {
@@ -297,13 +336,6 @@ $(document).ready(function () {
             var file = e.originalEvent.dataTransfer.files[0];
             handleImageFile(file);
         }
-    });
-
-    // Also allow clicking the textarea to trigger file picker when empty
-    // (only if there's no text and no image yet)
-    $("#prompt").on("click", function(e) {
-        // Don't intercept — let normal text editing work.
-        // Users drag-drop images onto the textarea.
     });
 
     // --- Submit ---
