@@ -5,38 +5,55 @@ const serve = require('koa-static');
 const path = require('path');
 const config = require('./config/config');
 const winston = require('winston');
+const multer = require('koa-multer');
 
 const logger = winston.loggers.get('default');
 
 const app = new Koa();
-app.use(bodyParser({ enableTypes: ['json'], jsonLimit: '1mb' }));
 
-app.use(async (ctx, next) => {
-	try {
-		await next();
-	} catch (err) {
-		const status = err.status || 500;
-		ctx.status = status;
-		logger.error('Request error', { status, message: err.message, stack: err.stack });
-		ctx.body = {
-			error: {
-				code: status,
-				message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
-			},
-		};
-	}
+// JSON body parser — larger limit for base64 image payloads
+app.use(bodyParser({ enableTypes: ['json'], jsonLimit: '10mb' }));
+
+// Multer for multipart file uploads (image field)
+const storage = multer.memoryStorage();
+const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed'), false);
+        }
+    },
 });
 
-require('./app/routes')(app);
+app.use(async (ctx, next) => {
+    try {
+        await next();
+    } catch (err) {
+        const status = err.status || 500;
+        ctx.status = status;
+        logger.error('Request error', { status, message: err.message, stack: err.stack });
+        ctx.body = {
+            error: {
+                code: status,
+                message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+            },
+        };
+    }
+});
+
+require('./app/routes')(app, upload);
 
 const publicDir = path.join(__dirname, 'public');
 
 app.use(async (ctx, next) => {
-	if (ctx.url === '/' || /^\/img\//.test(ctx.url)) {
-		await next();
-	} else {
-		await send(ctx, 'index.html', { root: publicDir });
-	}
+    if (ctx.url === '/' || /^\/img\//.test(ctx.url)) {
+        await next();
+    } else {
+        await send(ctx, 'index.html', { root: publicDir });
+    }
 });
 
 app.use(serve(publicDir, { index: 'index.html' }));
