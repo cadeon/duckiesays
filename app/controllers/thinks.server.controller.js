@@ -8,7 +8,8 @@ const logger = winston.loggers.get('default');
 
 const MAX_PROMPT_LENGTH = 1000;
 const URL_FETCH_TIMEOUT_MS = 10000;
-const URL_PATTERN = /^https?:\/\/.+/i;
+const REQUEST_TIMEOUT_MS = 30000;
+const URL_PATTERN = /^https?:\/\/.+$/i;
 
 function stripHtml(html) {
 	return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
