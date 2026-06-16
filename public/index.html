@@ -251,7 +251,9 @@ $(document).ready(function () {
         var response = $("#response").text();
         // If there was an image, use the LLM-generated description as the prompt
         var effectivePrompt = lastImageDescription
-            ? "responded to image of " + lastImageDescription
+            ? (prompt && prompt.trim()
+                ? prompt + " (responded to image of " + lastImageDescription + ")"
+                : "responded to image of " + lastImageDescription)
             : prompt;
         if (!effectivePrompt.trim()) return '';
         try {
