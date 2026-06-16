@@ -177,7 +177,6 @@ body {
 
 /* Upload button */
 #uploadBtn {
-    display: none;
     margin: 0 auto 8px;
     padding: 8px 16px;
     background-color: rgba(255, 255, 255, 0.2);
@@ -316,7 +315,7 @@ $(document).ready(function () {
     // --- Image upload ---
     function showImageArea() {
         $("#imageArea").addClass("has-image");
-        $("#uploadBtn").removeClass("visible");
+        $("#uploadBtn").hide();
     }
 
     function hideImageArea() {
@@ -324,6 +323,7 @@ $(document).ready(function () {
         $("#imagePreview").hide();
         $("#imageDropZone").show();
         $("#imageInput").val('');
+        $("#uploadBtn").show();
         currentImageData = null;
     }
 
