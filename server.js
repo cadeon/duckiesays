@@ -46,17 +46,6 @@ app.use(async (ctx, next) => {
 
 require('./app/routes')(app, upload);
 
-// Redirect ben.not-really.me to /ben
-app.use(async (ctx, next) => {
-    if (ctx.host === 'ben.not-really.me' || ctx.headers.host === 'ben.not-really.me') {
-        if (ctx.path !== '/ben') {
-            ctx.redirect('/ben');
-            return;
-        }
-    }
-    await next();
-});
-
 const publicDir = path.join(__dirname, 'public');
 
 app.use(async (ctx, next) => {
