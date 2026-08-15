@@ -1,0 +1,52 @@
+name: Build and Push DuckieSays
+
+on:
+  push:
+    branches: [main, duckie_thinks]
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: docker
+    steps:
+      - name: Checkout
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "refs/heads/"* ]]; then
+            BRANCH="${BRANCH#refs/heads/}"
+          fi
+          git clone --depth=1 --branch="$BRANCH" https://github.com/cadeon/duckiesays.git src
+          cd src
+
+      - name: Build and Push
+        run: |
+          # Get version tag (v25, v25.1, etc.) or create one from commit
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            VERSION="${{ github.ref_name }}"
+          else
+            SHA="${{ github.sha }}"
+            BASE_TAG="v25"
+            COMMITS=$(git rev-list --count "$BASE_TAG"..HEAD 2>/dev/null || echo "0")
+            VERSION="${BASE_TAG}-${COMMITS}-${SHA:0:7}"
+          fi
+          
+          echo "Building duckiesays image with version: $VERSION"
+          
+          # Build and push to local registry
+          docker build -t registry.not-really.me/caduffy/duckiesays:$VERSION .
+          docker push registry.not-really.me/caduffy/duckiesays:$VERSION
+          
+          # Also tag as latest
+          docker tag registry.not-really.me/caduffy/duckiesays:$VERSION registry.not-really.me/caduffy/duckiesays:latest
+          docker push registry.not-really.me/caduffy/duckiesays:latest
+          
+          # Push to Docker Hub as well
+          docker tag registry.not-really.me/caduffy/duckiesays:$VERSION docker.io/cadeon924/duckiesays:$VERSION
+          docker tag registry.not-really.me/caduffy/duckiesays:$VERSION docker.io/cadeon924/duckiesays:latest
+          
+          # Login to Docker Hub (password from secret)
+          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u cadeon924 --password-stdin 2>/dev/null || true
+          docker push docker.io/cadeon924/duckiesays:$VERSION 2>/dev/null || echo "Docker Hub push skipped"
+          docker push docker.io/cadeon924/duckiesays:latest 2>/dev/null || echo "Docker Hub latest push skipped"
+        working-directory: src
